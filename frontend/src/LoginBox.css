@@ -1,0 +1,57 @@
+.loginBox {
+	background-color: #4287f5;
+	margin: 100px auto 20px auto;
+	padding: 20px;
+	width: 400px;
+}
+
+.prompt {
+	margin: 0;
+	font-size: 26pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+.label {
+	margin: 10px 0 2px 0;
+	font-size: 16pt;
+}
+
+.button {
+	cursor: pointer;
+	margin: 10px 0 0 0;
+	width: 100%;
+	height: 50px;
+	border: 1px solid black;
+	background-color: #87FF65;
+	font-size: 16pt;
+}
+
+.button:hover {
+	filter: brightness(90%);
+}
+
+.switchButton {
+	margin: 0 auto 0 auto;
+	width: 50%;
+	display: block;
+	background-color: #F4E409;
+}
+
+.backButton {
+	margin: 0;
+	padding: 0;
+	width: 46px;
+	height: 46px;
+	position: absolute;
+	background-color: #F4E409;
+}
+
+.backButton img {
+	height: 46px;
+}
+
+hr {
+	margin: 20px 0 20px 0;
+	border: 2px solid black;
+}
