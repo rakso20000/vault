@@ -8,5 +8,8 @@
 		"start": "node .",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "David Wolff"
+	"author": "David Wolff",
+	"dependencies": {
+		"pg": "^8.7.3"
+	}
 }

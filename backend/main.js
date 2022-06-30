@@ -1,5 +1,6 @@
 import http from 'node:http';
 import {getHandler} from './endpoints.js';
+import {initDB} from './dbClient.js';
 
 import './login.js';
 import './createAccount.js';
@@ -48,7 +49,24 @@ const handleRequest = async (req, res) => {
 	
 };
 
-const server = http.createServer(handleRequest);
-server.listen(port, '0.0.0.0');
+const init = async () => {
+	
+	await initDB();
+	
+	const server = http.createServer(handleRequest);
+	server.listen(port, '0.0.0.0');
+	
+	console.log(`Started server on port ${port}`);
+	
+};
 
-console.log(`Started server on port ${port}`);
+init().catch(error => {
+	
+	if (error.stack)
+		console.error(error.stack);
+	
+	console.error(error);
+	
+	process.exit(1);
+	
+});
