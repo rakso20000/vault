@@ -8,7 +8,8 @@ const setupTables = async () => {
 	await dbClient.query(`
 		CREATE TABLE IF NOT EXISTS users (
 			username TEXT PRIMARY KEY,
-			password TEXT
+			password_hash CHAR(88) NOT NULL,
+			password_salt CHAR(44) NOT NULL
 		);
 	`);
 	

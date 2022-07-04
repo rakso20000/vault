@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import './LoginBox.css';
 import {apiCall} from './util.js';
+import {generateSalt, hashPassword} from './crypto';
 import TextInput from './TextInput';
 import backArrow from './assets/back_arrow.svg';
 
@@ -44,24 +45,28 @@ const CreateAccountForm = ({setUserData, setCreatingAccount}) => {
 		if (username === '' || password === '' || password !== passwordConfirm)
 			return;
 		
+		const salt = generateSalt();
+		const hash = await hashPassword(password, salt);
+		
 		const {success, error} = await apiCall('POST', 'createAccount', {
 			username,
-			password
+			hash,
+			salt
 		});
 		
-		if (success) {
-			
-			setUserData({
-				isLoggedIn: true,
-				username
-			});
-			
-		} else {
+		if (!success) {
 			
 			if (error === 'USERNAME_TAKEN')
 				setUsernameError('Username is already taken');
 			
+			return;
+			
 		}
+		
+		setUserData({
+			isLoggedIn: true,
+			username
+		});
 		
 	};
 	

@@ -1,10 +1,10 @@
 import {addEndpoint} from './endpoints.js';
 import {dbClient} from './dbClient.js';
 
-addEndpoint('login', 'POST', async ({username, hash}) => {
+addEndpoint('getUserSalt', 'POST', async ({username}) => {
 	
 	const response = await dbClient.query(`
-		SELECT password_hash FROM users WHERE
+		SELECT password_salt FROM users WHERE
 			username = $1;
 	`, [
 		username
@@ -16,14 +16,13 @@ addEndpoint('login', 'POST', async ({username, hash}) => {
 			error: 'UNKNOWN_USER'
 		};
 	
-	if (response.rows[0].password_hash !== hash)
-		return {
-			success: false,
-			error: 'INCORRECT_PASSWORD'
-		};
+	const salt = response.rows[0].password_salt;
+	
+	console.log(response.rows);
 	
 	return {
-		success: true
+		success: true,
+		salt
 	};
 	
 });

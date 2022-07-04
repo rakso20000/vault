@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import './LoginBox.css';
 import {apiCall} from './util.js';
+import {hashPassword} from './crypto';
 import TextInput from './TextInput';
 
 const LoginForm = ({setUserData, setCreatingAccount}) => {
@@ -34,26 +35,41 @@ const LoginForm = ({setUserData, setCreatingAccount}) => {
 		if (username === '' || password === '')
 			return;
 		
-		const {success, error} = await apiCall('POST', 'login', {
-			username,
-			password
+		let {success, error, salt} = await apiCall('POST', 'getUserSalt', {
+			username
 		});
 		
-		if (success) {
+		if (!success) {
 			
-			setUserData({
-				isLoggedIn: true,
-				username
-			})
+			if (error === 'UNKNOWN_USER')
+				setUsernameError('Unknown user');
 			
-		} else {
+			return;
+			
+		}
+		
+		const hash = await hashPassword(password, salt);
+		
+		({success, error} = await apiCall('POST', 'login', {
+			username,
+			hash
+		}));
+		
+		if (!success) {
 			
 			if (error === 'UNKNOWN_USER')
 				setUsernameError('Unknown user');
 			else if (error === 'INCORRECT_PASSWORD')
 				setPasswordError('Incorrect password');
 			
+			return;
+			
 		}
+		
+		setUserData({
+			isLoggedIn: true,
+			username
+		})
 		
 	};
 	

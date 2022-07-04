@@ -2,6 +2,7 @@ import http from 'node:http';
 import {getHandler} from './endpoints.js';
 import {initDB} from './dbClient.js';
 
+import './getUserSalt.js';
 import './login.js';
 import './createAccount.js';
 
