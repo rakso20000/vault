@@ -1,3 +1,5 @@
+import {useEffect} from 'react';
+
 const apiCall = async (method, name, data) => {
 	
 	const response = await fetch(`/api/${name}`, {
@@ -12,6 +14,18 @@ const apiCall = async (method, name, data) => {
 	
 };
 
+const useAsyncEffect = (asyncEffect, dependencies) => {
+	
+	useEffect(() => {
+		
+		asyncEffect().catch(console.error)
+		
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, dependencies);
+	
+};
+
 export {
-	apiCall
+	apiCall,
+	useAsyncEffect
 };

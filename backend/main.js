@@ -5,6 +5,8 @@ import {initDB} from './dbClient.js';
 import './getUserSalt.js';
 import './login.js';
 import './createAccount.js';
+import './getFolders.js';
+import './addFolder.js';
 
 const port = 14151;
 

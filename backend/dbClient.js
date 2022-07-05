@@ -5,13 +5,29 @@ let dbClient;
 
 const setupTables = async () => {
 	
-	await dbClient.query(`
+	const createUsers = dbClient.query(`
 		CREATE TABLE IF NOT EXISTS users (
-			username TEXT PRIMARY KEY,
+			name TEXT,
 			password_hash CHAR(88) NOT NULL,
-			password_salt CHAR(44) NOT NULL
+			password_salt CHAR(44) NOT NULL,
+			PRIMARY KEY (name)
 		);
 	`);
+	
+	const createFolders = dbClient.query(`
+		CREATE TABLE IF NOT EXISTS folders (
+			id SERIAL,
+			owner TEXT NOT NULL,
+			name TEXT UNIQUE NOT NULL,
+			PRIMARY KEY(id),
+			FOREIGN KEY (owner)
+				REFERENCES public.users(name)
+				ON UPDATE CASCADE
+				ON DELETE CASCADE
+		);
+	`);
+	
+	await Promise.all([createUsers, createFolders]);
 	
 }
 

@@ -5,7 +5,7 @@ addEndpoint('login', 'POST', async ({username, hash}) => {
 	
 	const response = await dbClient.query(`
 		SELECT password_hash FROM users WHERE
-			username = $1;
+			name = $1;
 	`, [
 		username
 	]);

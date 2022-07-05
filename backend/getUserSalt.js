@@ -5,7 +5,7 @@ addEndpoint('getUserSalt', 'POST', async ({username}) => {
 	
 	const response = await dbClient.query(`
 		SELECT password_salt FROM users WHERE
-			username = $1;
+			name = $1;
 	`, [
 		username
 	]);
@@ -17,8 +17,6 @@ addEndpoint('getUserSalt', 'POST', async ({username}) => {
 		};
 	
 	const salt = response.rows[0].password_salt;
-	
-	console.log(response.rows);
 	
 	return {
 		success: true,

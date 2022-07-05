@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import './App.css';
 import LoginBox from './LoginBox';
+import Main from './Main';
 
 const App = () => {
 	
@@ -12,7 +13,12 @@ const App = () => {
 		<div className="title">
 			Vault - {userData.isLoggedIn ? userData.username : 'Login'}
 		</div>
-		{!userData.isLoggedIn ? <LoginBox setUserData={setUserData} /> : null}
+		<div className="content">
+			{!userData.isLoggedIn ?
+				<LoginBox setUserData={setUserData} /> :
+				<Main userData={userData} />
+			}
+		</div>
 	</>;
 	
 };

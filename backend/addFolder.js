@@ -1,28 +1,25 @@
 import {addEndpoint} from './endpoints.js';
 import {dbClient} from './dbClient.js';
 
-addEndpoint('createAccount', 'POST', async ({username, hash, salt}) => {
+addEndpoint('addFolder', 'POST', async ({username, folder}) => {
 	
 	const result = await dbClient.query(`
-		INSERT INTO users (
-			name,
-			password_hash,
-			password_salt
+		INSERT INTO folders (
+			owner,
+			name
 		) VALUES (
 			$1,
-			$2,
-			$3
+			$2
 		) ON CONFLICT DO NOTHING;
 	`, [
 		username,
-		hash,
-		salt
+		folder
 	]);
 	
 	if (result.rowCount === 0)
 		return {
 			success: false,
-			error: 'USERNAME_TAKEN'
+			error: 'FOLDER_NAME_DUPLICATE'
 		};
 	
 	return {

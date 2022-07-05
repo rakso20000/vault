@@ -1,6 +1,11 @@
 .title {
+	flex-grow: 0;
 	padding: 10px;
 	background-color: #4287f5;
 	font-size: 26pt;
 	font-weight: bold;
+}
+
+.content {
+	flex-grow: 1;
 }
