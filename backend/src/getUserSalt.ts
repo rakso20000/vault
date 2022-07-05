@@ -1,7 +1,11 @@
-import {addEndpoint} from './endpoints.js';
-import {dbClient} from './dbClient.js';
+import {addEndpoint} from './endpoints';
+import {dbClient} from './dbClient';
 
-addEndpoint('getUserSalt', 'POST', async ({username}) => {
+type Args = {
+	username: string;
+};
+
+addEndpoint<Args>('getUserSalt', 'POST', async ({username}) => {
 	
 	const response = await dbClient.query(`
 		SELECT password_salt FROM users WHERE

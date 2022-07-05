@@ -10,7 +10,7 @@
 		"install:frontend": "cd frontend && npm install",
 		"install:backend": "cd backend && npm install",
 		"start-dev:frontend": "cd frontend && npm start",
-		"start-dev:backend": "cd backend && npm start",
+		"start-dev:backend": "cd backend && npm run start-dev",
 		"start-dev": "run-p start-dev:*",
 		"postinstall": "run-p install:*"
 	},

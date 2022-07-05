@@ -1,7 +1,6 @@
-import pg from 'pg';
-const {Client} = pg;
+import {Client} from 'pg';
 
-let dbClient;
+let dbClient: Client;
 
 const setupTables = async () => {
 	

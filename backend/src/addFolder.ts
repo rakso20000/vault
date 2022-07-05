@@ -1,7 +1,12 @@
-import {addEndpoint} from './endpoints.js';
-import {dbClient} from './dbClient.js';
+import {addEndpoint} from './endpoints';
+import {dbClient} from './dbClient';
 
-addEndpoint('addFolder', 'POST', async ({username, cipherFolderName}) => {
+type Args = {
+	username: string;
+	cipherFolderName: string;
+};
+
+addEndpoint<Args>('addFolder', 'POST', async ({username, cipherFolderName}) => {
 	
 	const result = await dbClient.query(`
 		INSERT INTO folders (

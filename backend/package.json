@@ -2,14 +2,22 @@
 	"name": "vault-backend",
 	"version": "0.1.0",
 	"private": true,
-	"main": "main.js",
-	"type": "module",
+	"main": "build/main.js",
 	"scripts": {
 		"start": "node .",
+		"build": "npx tsc -p .",
+		"start-dev": "nodemon src/main.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "David Wolff",
 	"dependencies": {
 		"pg": "^8.7.3"
+	},
+	"devDependencies": {
+		"@types/node": "^18.0.1",
+		"@types/pg": "^8.6.5",
+		"nodemon": "^2.0.19",
+		"ts-node": "^10.8.2",
+		"typescript": "^4.7.4"
 	}
 }

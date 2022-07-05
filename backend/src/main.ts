@@ -1,16 +1,17 @@
 import http from 'node:http';
-import {getHandler} from './endpoints.js';
-import {initDB} from './dbClient.js';
+import {getEndpoint} from './endpoints';
+import {initDB} from './dbClient';
+import {IncomingMessage, RequestListener, ServerResponse} from 'http';
 
-import './getUserSalt.js';
-import './login.js';
-import './createAccount.js';
-import './getFolders.js';
-import './addFolder.js';
+import './getUserSalt';
+import './login';
+import './createAccount';
+import './getFolders';
+import './addFolder';
 
 const port = 14151;
 
-const readBody = req => new Promise((resolve, reject) => {
+const readBody = (req: IncomingMessage) => new Promise((resolve, reject) => {
 	
 	let body = '';
 	
@@ -27,14 +28,20 @@ const readBody = req => new Promise((resolve, reject) => {
 	
 });
 
-const handleAPIRequest = async (req, res) => {
+const handleAPIRequest = async (req: IncomingMessage, res: ServerResponse) => {
 	
-	const endpointName = req.url.slice(5);
+	const endpointName = req?.url?.slice(5);
 	
-	const handler = getHandler(endpointName, req.method);
+	if (!endpointName)
+		return;
+	
+	if (!req.method)
+		return;
+	
+	const endpoint = getEndpoint(endpointName, req.method);
 	const body = await readBody(req);
 	
-	const response = await handler(body);
+	const response = await endpoint?.(body);
 	
 	res.setHeader('Cache-Control', 'no-store');
 	res.setHeader('Content-type', 'application/json');
@@ -43,9 +50,9 @@ const handleAPIRequest = async (req, res) => {
 	
 };
 
-const handleRequest = async (req, res) => {
+const handleRequest: RequestListener = async (req, res) => {
 	
-	if (req.url.startsWith('/api/'))
+	if (req?.url?.startsWith('/api/'))
 		await handleAPIRequest(req, res);
 	else
 		res.end('TODO');

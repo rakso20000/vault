@@ -1,7 +1,11 @@
-import {addEndpoint} from './endpoints.js';
-import {dbClient} from './dbClient.js';
+import {addEndpoint} from './endpoints';
+import {dbClient} from './dbClient';
 
-addEndpoint('getFolders', 'POST', async ({username}) => {
+type Args = {
+	username: string;
+};
+
+addEndpoint<Args>('getFolders', 'POST', async ({username}) => {
 	
 	const result = await dbClient.query(`
 		SELECT cipher_name FROM folders WHERE

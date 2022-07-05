@@ -1,7 +1,13 @@
-import {addEndpoint} from './endpoints.js';
-import {dbClient} from './dbClient.js';
+import {addEndpoint} from './endpoints';
+import {dbClient} from './dbClient';
 
-addEndpoint('createAccount', 'POST', async ({username, hash, salt}) => {
+type Args = {
+	username: string;
+	hash: string;
+	salt: string;
+};
+
+addEndpoint<Args>('createAccount', 'POST', async ({username, hash, salt}) => {
 	
 	const result = await dbClient.query(`
 		INSERT INTO users (
