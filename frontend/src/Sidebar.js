@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {apiCall, useAsyncEffect} from './util';
+import {encryptText, decryptText} from './crypto';
 import style from './Sidebar.module.css';
 import Folder from './Folder';
 import TextInput from './TextInput';
@@ -12,9 +13,14 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 	
 	useAsyncEffect(async () => {
 		
-		const {folders} = await apiCall('POST', 'getFolders', {
+		const {cipherFolderNames} = await apiCall('POST', 'getFolders', {
 			username: userData.username
 		});
+		
+		const folders = await Promise.all(cipherFolderNames.map(async cipherFolderName => ({
+			key: cipherFolderName,
+			name: await decryptText(cipherFolderName)
+		})));
 		
 		setFolders(folders);
 		
@@ -29,9 +35,11 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 			
 		}
 		
+		const cipherFolderName = await encryptText(folderName);
+		
 		const {success, error} = await apiCall('POST', 'addFolder', {
 			username: userData.username,
-			folder: folderName
+			cipherFolderName
 		});
 		
 		if (!success) {
@@ -43,12 +51,17 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 			
 		}
 		
-		setFolders([...folders, folderName]);
+		const folder = {
+			key: cipherFolderName,
+			name: folderName
+		};
+		
+		setFolders([...folders, folder]);
 		
 	};
 	
 	return <>
-		{folders.map(folder => <Folder key={folder} folder={folder} setSelected={setSelectedFolder} />)}
+		{folders.map(folder => <Folder key={folder.key} folder={folder} setSelected={setSelectedFolder} />)}
 		<p className={style.label}>Add folder:</p>
 		<TextInput value={folderName} setValue={setFolderName} errorMessage={folderNameError} setErrorMessage={setFolderNameError} onSubmit={addFolder} />
 		<button onClick={addFolder}>Add folder</button>

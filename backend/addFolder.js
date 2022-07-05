@@ -1,19 +1,19 @@
 import {addEndpoint} from './endpoints.js';
 import {dbClient} from './dbClient.js';
 
-addEndpoint('addFolder', 'POST', async ({username, folder}) => {
+addEndpoint('addFolder', 'POST', async ({username, cipherFolderName}) => {
 	
 	const result = await dbClient.query(`
 		INSERT INTO folders (
 			owner,
-			name
+			cipher_name
 		) VALUES (
 			$1,
 			$2
 		) ON CONFLICT DO NOTHING;
 	`, [
 		username,
-		folder
+		cipherFolderName
 	]);
 	
 	if (result.rowCount === 0)

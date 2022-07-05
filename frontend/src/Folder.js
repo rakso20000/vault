@@ -7,7 +7,7 @@ const Folder = ({folder, setSelected}) => {
 	};
 	
 	return <div>
-		<button onClick={select}>{folder}</button>
+		<button onClick={select}>{folder.name}</button>
 	</div>;
 	
 };

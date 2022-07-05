@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import style from './LoginBox.module.css';
 import {apiCall} from './util.js';
-import {hashPassword} from './crypto';
+import {hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
 
 const LoginForm = ({setUserData, setCreatingAccount}) => {
@@ -66,10 +66,12 @@ const LoginForm = ({setUserData, setCreatingAccount}) => {
 			
 		}
 		
+		calculateKey(password, salt);
+		
 		setUserData({
 			isLoggedIn: true,
 			username
-		})
+		});
 		
 	};
 	

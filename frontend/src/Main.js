@@ -11,7 +11,7 @@ const Main = ({userData}) => {
 			<Sidebar userData={userData} setSelectedFolder={setSelectedFolder} />
 		</div>
 		<div className={style.content}>
-			{selectedFolder}
+			{selectedFolder?.name}
 		</div>
 	</div>;
 	

@@ -18,7 +18,7 @@ const setupTables = async () => {
 		CREATE TABLE IF NOT EXISTS folders (
 			id SERIAL,
 			owner TEXT NOT NULL,
-			name TEXT UNIQUE NOT NULL,
+			cipher_name TEXT UNIQUE NOT NULL,
 			PRIMARY KEY(id),
 			FOREIGN KEY (owner)
 				REFERENCES public.users(name)

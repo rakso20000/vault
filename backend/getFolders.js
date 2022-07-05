@@ -4,18 +4,18 @@ import {dbClient} from './dbClient.js';
 addEndpoint('getFolders', 'POST', async ({username}) => {
 	
 	const result = await dbClient.query(`
-		SELECT name FROM folders WHERE
+		SELECT cipher_name FROM folders WHERE
 			owner = $1
 		ORDER BY id;
 	`, [
 		username
 	]);
 	
-	const folders = result.rows.map(row => row.name);
+	const cipherFolderNames = result.rows.map(row => row.cipher_name);
 	
 	return {
 		success: true,
-		folders
+		cipherFolderNames
 	};
 	
 });
