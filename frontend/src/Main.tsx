@@ -1,10 +1,20 @@
-import {useState} from 'react';
+import {FC, useState} from 'react';
 import style from './Main.module.css';
 import Sidebar from './Sidebar';
+import {UserData} from './App';
 
-const Main = ({userData}) => {
+type Folder = {
+	key: string;
+	name: string;
+}
+
+type Props = {
+	userData: UserData
+};
+
+const Main: FC<Props> = ({userData}) => {
 	
-	const [selectedFolder, setSelectedFolder] = useState(null);
+	const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
 	
 	return <div className={style.main}>
 		<div className={style.sidebar}>
@@ -15,6 +25,10 @@ const Main = ({userData}) => {
 		</div>
 	</div>;
 	
+};
+
+export type {
+	Folder
 };
 
 export default Main;

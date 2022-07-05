@@ -1,16 +1,22 @@
-import {useState} from 'react';
+import {FC, useState} from 'react';
 import style from './LoginBox.module.css';
-import {apiCall} from './util.js';
+import {apiCall, SetState} from './util';
 import {hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
+import {UserData} from './App';
 
-const LoginForm = ({setUserData, setCreatingAccount}) => {
+type Props = {
+	setUserData: SetState<UserData>;
+	setCreatingAccount: SetState<boolean>;
+};
+
+const LoginForm: FC<Props> = ({setUserData, setCreatingAccount}) => {
 	
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	
-	const [usernameError, setUsernameError] = useState(null);
-	const [passwordError, setPasswordError] = useState(null);
+	const [usernameError, setUsernameError] = useState<string | null>(null);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
 	
 	const clearErrors = () => {
 		
@@ -84,9 +90,9 @@ const LoginForm = ({setUserData, setCreatingAccount}) => {
 	return <>
 		<p className={style.prompt}>Login</p>
 		<p className={style.label}>Username</p>
-		<TextInput value={username} setValue={setUsername} errorMessage={usernameError} setErrorMessage={setUsernameError} onSubmit={login} />
+		<TextInput value={[username, setUsername]} errorMessage={[usernameError, setUsernameError]} onSubmit={login} />
 		<p className={style.label}>Password</p>
-		<TextInput value={password} setValue={setPassword} errorMessage={passwordError} setErrorMessage={setPasswordError} type="password" onSubmit={login} />
+		<TextInput value={[password, setPassword]} errorMessage={[passwordError, setPasswordError]} type="password" onSubmit={login} />
 		<button className={style.button} onClick={login}>Login</button>
 		<hr />
 		<button className={[style.button, style.switchButton].join(' ')} onClick={createAccount}>Create account</button>

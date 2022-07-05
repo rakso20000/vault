@@ -1,15 +1,22 @@
-import {useState} from 'react';
-import {apiCall, useAsyncEffect} from './util';
+import {FC, useState} from 'react';
+import {apiCall, SetState, useAsyncEffect} from './util';
 import {encryptText, decryptText} from './crypto';
 import style from './Sidebar.module.css';
-import Folder from './Folder';
+import FolderSelector from './FolderSelector';
 import TextInput from './TextInput';
+import {UserData} from './App';
+import {Folder} from './Main';
 
-const Sidebar = ({userData, setSelectedFolder}) => {
+type Props = {
+	userData: UserData;
+	setSelectedFolder: SetState<Folder | null>;
+};
+
+const Sidebar: FC<Props> = ({userData, setSelectedFolder}) => {
 	
-	const [folders, setFolders] = useState([]);
+	const [folders, setFolders] = useState<Folder[]>([]);
 	const [folderName, setFolderName] = useState('');
-	const [folderNameError, setFolderNameError] = useState('');
+	const [folderNameError, setFolderNameError] = useState<string | null>(null);
 	
 	useAsyncEffect(async () => {
 		
@@ -17,7 +24,7 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 			username: userData.username
 		});
 		
-		const folders = await Promise.all(cipherFolderNames.map(async cipherFolderName => ({
+		const folders: Folder[] = await Promise.all(cipherFolderNames.map(async (cipherFolderName: string) => ({
 			key: cipherFolderName,
 			name: await decryptText(cipherFolderName)
 		})));
@@ -45,13 +52,13 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 		if (!success) {
 			
 			if (error === 'FOLDER_NAME_DUPLICATE')
-				setFolderNameError('Folder already exists');
+				setFolderNameError('FolderSelector already exists');
 			
 			return;
 			
 		}
 		
-		const folder = {
+		const folder: Folder = {
 			key: cipherFolderName,
 			name: folderName
 		};
@@ -61,9 +68,9 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 	};
 	
 	return <>
-		{folders.map(folder => <Folder key={folder.key} folder={folder} setSelected={setSelectedFolder} />)}
+		{folders.map(folder => <FolderSelector key={folder.key} folder={folder} setSelected={setSelectedFolder} />)}
 		<p className={style.label}>Add folder:</p>
-		<TextInput value={folderName} setValue={setFolderName} errorMessage={folderNameError} setErrorMessage={setFolderNameError} onSubmit={addFolder} />
+		<TextInput value={[folderName, setFolderName]} errorMessage={[folderNameError, setFolderNameError]} onSubmit={addFolder} />
 		<button onClick={addFolder}>Add folder</button>
 	</>
 	

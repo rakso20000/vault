@@ -3,9 +3,14 @@ import style from './App.module.css';
 import LoginBox from './LoginBox';
 import Main from './Main';
 
+type UserData = {
+	isLoggedIn: boolean;
+	username?: string;
+};
+
 const App = () => {
 	
-	const [userData, setUserData] = useState({
+	const [userData, setUserData] = useState<UserData>({
 		isLoggedIn: false
 	});
 	
@@ -21,6 +26,10 @@ const App = () => {
 		</div>
 	</>;
 	
+};
+
+export type {
+	UserData
 };
 
 export default App;

@@ -1,6 +1,9 @@
-import {useEffect} from 'react';
+import {Dispatch, SetStateAction, useEffect} from 'react';
 
-const apiCall = async (method, name, data) => {
+type SetState<T> = Dispatch<SetStateAction<T>>;
+type State<T> = [T, SetState<T>];
+
+const apiCall = async (method: string, name: string, data: object) => {
 	
 	const response = await fetch(`/api/${name}`, {
 		method,
@@ -14,7 +17,7 @@ const apiCall = async (method, name, data) => {
 	
 };
 
-const useAsyncEffect = (asyncEffect, dependencies) => {
+const useAsyncEffect = (asyncEffect: () => Promise<void>, dependencies: any[]) => {
 	
 	useEffect(() => {
 		
@@ -23,6 +26,11 @@ const useAsyncEffect = (asyncEffect, dependencies) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, dependencies);
 	
+};
+
+export type {
+	SetState,
+	State
 };
 
 export {

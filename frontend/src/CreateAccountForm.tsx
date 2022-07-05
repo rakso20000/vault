@@ -1,19 +1,25 @@
-import {useState} from 'react';
+import {FC, useState} from 'react';
 import style from './LoginBox.module.css';
-import {apiCall} from './util.js';
+import {SetState, apiCall} from './util';
 import {generateSalt, hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
 import backArrow from './assets/back_arrow.svg';
+import {UserData} from './App';
 
-const CreateAccountForm = ({setUserData, setCreatingAccount}) => {
+type Props = {
+	setUserData: SetState<UserData>;
+	setCreatingAccount: SetState<boolean>;
+};
+
+const CreateAccountForm : FC<Props> = ({setUserData, setCreatingAccount}) => {
 	
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [passwordConfirm, setPasswordConfirm] = useState('');
 	
-	const [usernameError, setUsernameError] = useState(null);
-	const [passwordError, setPasswordError] = useState(null);
-	const [passwordConfirmError, setPasswordConfirmError] = useState(null);
+	const [usernameError, setUsernameError] = useState<string | null>(null);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
+	const [passwordConfirmError, setPasswordConfirmError] = useState<string | null>(null);
 	
 	const clearErrors = () => {
 		
@@ -82,11 +88,11 @@ const CreateAccountForm = ({setUserData, setCreatingAccount}) => {
 		<button className={[style.button, style.backButton].join(' ')} onClick={login}><img src={backArrow}  alt="Back" /></button>
 		<p className={style.prompt}>Create account</p>
 		<p className={style.label}>Username</p>
-		<TextInput value={username} setValue={setUsername} errorMessage={usernameError} setErrorMessage={setUsernameError} onSubmit={createAccount} />
+		<TextInput value={[username, setUsername]} errorMessage={[usernameError, setUsernameError]} onSubmit={createAccount} />
 		<p className={style.label}>Password</p>
-		<TextInput value={password} setValue={setPassword} errorMessage={passwordError} setErrorMessage={setPasswordError} type="password" onSubmit={createAccount} />
+		<TextInput value={[password, setPassword]} errorMessage={[passwordError, setPasswordError]} type="password" onSubmit={createAccount} />
 		<p className={style.label}>Confirm password</p>
-		<TextInput value={passwordConfirm} setValue={setPasswordConfirm} errorMessage={passwordConfirmError} setErrorMessage={setPasswordConfirmError} type="password" onSubmit={createAccount} />
+		<TextInput value={[passwordConfirm, setPasswordConfirm]} errorMessage={[passwordConfirmError, setPasswordConfirmError]} type="password" onSubmit={createAccount} />
 		<button className={style.button} onClick={createAccount}>Create account</button>
 	</>;
 	

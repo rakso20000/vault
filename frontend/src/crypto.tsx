@@ -1,17 +1,17 @@
 const crypto = window.crypto;
 const subtle = crypto.subtle;
 
-let resolveKey;
-let rejectKey;
+let resolveKey: (key: CryptoKey) => void;
+let rejectKey: (reason?: any) => void;
 
-let keyPromise = new Promise((resolve, reject) => {
+let keyPromise = new Promise<CryptoKey>((resolve, reject) => {
 	
 	resolveKey = resolve;
 	rejectKey = reject;
 	
 });
 
-const base64Encode = bytes => {
+const base64Encode = (bytes: Uint8Array) => {
 	
 	let binaryString = '';
 	
@@ -21,7 +21,7 @@ const base64Encode = bytes => {
 	
 };
 
-const base64Decode = base64 => {
+const base64Decode = (base64: string) => {
 	
 	const binaryString = window.atob(base64);
 	const bytes = new Uint8Array(binaryString.length);
@@ -41,12 +41,15 @@ const generateSalt = () => {
 	
 };
 
-const hashPassword = async (password, salt) => {
+const hashPassword = async (password: string, salt: string) => {
 	
 	const textEncoder = new TextEncoder();
 	const passwordData = textEncoder.encode(password);
 	const saltData = base64Decode(salt);
-	const data = new Uint8Array([...passwordData, ...saltData]);
+	
+	const data = new Uint8Array(passwordData.length + saltData.length);
+	data.set(passwordData);
+	data.set(saltData, passwordData.length);
 	
 	const digest = await subtle.digest('SHA-512', data);
 	
@@ -54,7 +57,7 @@ const hashPassword = async (password, salt) => {
 	
 };
 
-const calculateKey = (password, salt) => {
+const calculateKey = (password: string, salt: string) => {
 	
 	const generateKey = async () => {
 		
@@ -92,7 +95,7 @@ const calculateKey = (password, salt) => {
 	
 };
 
-const encryptText = async text => {
+const encryptText = async (text: string) => {
 	
 	const key = await keyPromise;
 	
@@ -110,11 +113,15 @@ const encryptText = async text => {
 		textData
 	);
 	
-	return base64Encode(new Uint8Array([...iv, ...new Uint8Array(ciphertextData)]));
+	const data = new Uint8Array(iv.length + ciphertextData.length);
+	data.set(iv);
+	data.set(ciphertextData, iv.length);
+	
+	return base64Encode(data);
 	
 };
 
-const decryptText = async ciphertext => {
+const decryptText = async (ciphertext: string) => {
 	
 	const key = await keyPromise;
 	
