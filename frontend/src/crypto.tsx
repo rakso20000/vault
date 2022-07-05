@@ -113,9 +113,10 @@ const encryptText = async (text: string) => {
 		textData
 	);
 	
-	const data = new Uint8Array(iv.length + ciphertextData.length);
+	const ciphertextDataArray = new Uint8Array(ciphertextData);
+	const data = new Uint8Array(iv.length + ciphertextDataArray.length);
 	data.set(iv);
-	data.set(ciphertextData, iv.length);
+	data.set(ciphertextDataArray, iv.length);
 	
 	return base64Encode(data);
 	
