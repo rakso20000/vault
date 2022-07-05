@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import './LoginBox.css';
+import style from './LoginBox.module.css';
 import {apiCall} from './util.js';
 import {generateSalt, hashPassword} from './crypto';
 import TextInput from './TextInput';
@@ -77,15 +77,15 @@ const CreateAccountForm = ({setUserData, setCreatingAccount}) => {
 	};
 	
 	return <>
-		<button className="button backButton" onClick={login}><img src={backArrow}  alt="Back" /></button>
-		<p className="prompt">Create account</p>
-		<p className="label">Username</p>
+		<button className={[style.button, style.backButton].join(' ')} onClick={login}><img src={backArrow}  alt="Back" /></button>
+		<p className={style.prompt}>Create account</p>
+		<p className={style.label}>Username</p>
 		<TextInput value={username} setValue={setUsername} errorMessage={usernameError} setErrorMessage={setUsernameError} onSubmit={createAccount} />
-		<p className="label">Password</p>
+		<p className={style.label}>Password</p>
 		<TextInput value={password} setValue={setPassword} errorMessage={passwordError} setErrorMessage={setPasswordError} type="password" onSubmit={createAccount} />
-		<p className="label">Confirm password</p>
+		<p className={style.label}>Confirm password</p>
 		<TextInput value={passwordConfirm} setValue={setPasswordConfirm} errorMessage={passwordConfirmError} setErrorMessage={setPasswordConfirmError} type="password" onSubmit={createAccount} />
-		<button className="button" onClick={createAccount}>Create account</button>
+		<button className={style.button} onClick={createAccount}>Create account</button>
 	</>;
 	
 };

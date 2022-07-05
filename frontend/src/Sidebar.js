@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {apiCall, useAsyncEffect} from './util';
-import './Sidebar.css';
+import style from './Sidebar.module.css';
 import Folder from './Folder';
 import TextInput from './TextInput';
 
@@ -49,7 +49,7 @@ const Sidebar = ({userData, setSelectedFolder}) => {
 	
 	return <>
 		{folders.map(folder => <Folder key={folder} folder={folder} setSelected={setSelectedFolder} />)}
-		<p className="sidebarLabel">Add folder:</p>
+		<p className={style.label}>Add folder:</p>
 		<TextInput value={folderName} setValue={setFolderName} errorMessage={folderNameError} setErrorMessage={setFolderNameError} onSubmit={addFolder} />
 		<button onClick={addFolder}>Add folder</button>
 	</>

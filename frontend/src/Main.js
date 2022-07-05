@@ -1,16 +1,16 @@
 import {useState} from 'react';
-import './Main.css';
+import style from './Main.module.css';
 import Sidebar from './Sidebar';
 
 const Main = ({userData}) => {
 	
 	const [selectedFolder, setSelectedFolder] = useState(null);
 	
-	return <div className="main">
-		<div className="sidebar">
+	return <div className={style.main}>
+		<div className={style.sidebar}>
 			<Sidebar userData={userData} setSelectedFolder={setSelectedFolder} />
 		</div>
-		<div className="folder">
+		<div className={style.content}>
 			{selectedFolder}
 		</div>
 	</div>;

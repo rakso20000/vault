@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import './App.css';
+import style from './App.module.css';
 import LoginBox from './LoginBox';
 import Main from './Main';
 
@@ -10,10 +10,10 @@ const App = () => {
 	});
 	
 	return <>
-		<div className="title">
+		<div className={style.title}>
 			Vault - {userData.isLoggedIn ? userData.username : 'Login'}
 		</div>
-		<div className="content">
+		<div className={style.content}>
 			{!userData.isLoggedIn ?
 				<LoginBox setUserData={setUserData} /> :
 				<Main userData={userData} />

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import './LoginBox.css';
+import style from './LoginBox.module.css';
 import {apiCall} from './util.js';
 import {hashPassword} from './crypto';
 import TextInput from './TextInput';
@@ -80,14 +80,14 @@ const LoginForm = ({setUserData, setCreatingAccount}) => {
 	};
 	
 	return <>
-		<p className="prompt">Login</p>
-		<p className="label">Username</p>
+		<p className={style.prompt}>Login</p>
+		<p className={style.label}>Username</p>
 		<TextInput value={username} setValue={setUsername} errorMessage={usernameError} setErrorMessage={setUsernameError} onSubmit={login} />
-		<p className="label">Password</p>
+		<p className={style.label}>Password</p>
 		<TextInput value={password} setValue={setPassword} errorMessage={passwordError} setErrorMessage={setPasswordError} type="password" onSubmit={login} />
-		<button className="button" onClick={login}>Login</button>
+		<button className={style.button} onClick={login}>Login</button>
 		<hr />
-		<button className="button switchButton" onClick={createAccount}>Create account</button>
+		<button className={[style.button, style.switchButton].join(' ')} onClick={createAccount}>Create account</button>
 	</>;
 	
 };
