@@ -1,0 +1,26 @@
+.label {
+	margin: 10px 0 2px 0;
+	font-size: 16pt;
+}
+
+.addFolder {
+	display: flex;
+}
+
+.input {
+	flex-grow: 1;
+}
+
+.button {
+	cursor: pointer;
+	margin: 0 0 0 5px;
+	height: 37px;
+	border: 1px solid black;
+	background-color: #F4E409;
+	font-size: 16pt;
+	padding: 5px;
+}
+
+.button:hover {
+	filter: brightness(90%);
+}

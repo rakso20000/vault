@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import style from './LoginBox.module.css';
+import style from './LoginBox.module.scss';
 import {apiCall, SetState} from './util';
 import {hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';

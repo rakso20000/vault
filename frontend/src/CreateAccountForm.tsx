@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import style from './LoginBox.module.css';
+import style from './LoginBox.module.scss';
 import {SetState, apiCall} from './util';
 import {generateSalt, hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
@@ -85,7 +85,7 @@ const CreateAccountForm : FC<Props> = ({setUserData, setCreatingAccount}) => {
 	};
 	
 	return <>
-		<button className={[style.button, style.backButton].join(' ')} onClick={login}><img src={backArrow}  alt="Back" /></button>
+		<button className={[style.button, style.backButton].join(' ')} onClick={login}><img src={backArrow} alt="Back" /></button>
 		<p className={style.prompt}>Create account</p>
 		<p className={style.label}>Username</p>
 		<TextInput value={[username, setUsername]} errorMessage={[usernameError, setUsernameError]} onSubmit={createAccount} />

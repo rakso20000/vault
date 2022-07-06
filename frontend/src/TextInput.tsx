@@ -1,5 +1,5 @@
 import {FC, ChangeEventHandler, KeyboardEventHandler} from 'react';
-import style from './TextInput.module.css';
+import style from './TextInput.module.scss';
 import {State} from './util';
 
 type Props = {

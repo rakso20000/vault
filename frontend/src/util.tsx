@@ -28,6 +28,12 @@ const useAsyncEffect = (asyncEffect: () => Promise<void>, dependencies: any[]) =
 	
 };
 
+const classes = (...classNames: (string | null)[]) => {
+	
+	return classNames.filter(className => className !== null).join(' ')
+	
+};
+
 export type {
 	SetState,
 	State
@@ -35,5 +41,6 @@ export type {
 
 export {
 	apiCall,
-	useAsyncEffect
+	useAsyncEffect,
+	classes
 };

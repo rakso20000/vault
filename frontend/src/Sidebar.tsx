@@ -1,7 +1,7 @@
 import {FC, useState} from 'react';
-import {apiCall, SetState, useAsyncEffect} from './util';
+import {apiCall, State, useAsyncEffect} from './util';
 import {encryptText, decryptText} from './crypto';
-import style from './Sidebar.module.css';
+import style from './Sidebar.module.scss';
 import FolderSelector from './FolderSelector';
 import TextInput from './TextInput';
 import {UserData} from './App';
@@ -9,10 +9,10 @@ import {Folder} from './Main';
 
 type Props = {
 	userData: UserData;
-	setSelectedFolder: SetState<Folder | null>;
+	selectedFolder: State<Folder | null>;
 };
 
-const Sidebar: FC<Props> = ({userData, setSelectedFolder}) => {
+const Sidebar: FC<Props> = ({userData, selectedFolder: [selectedFolder, setSelectedFolder]}) => {
 	
 	const [folders, setFolders] = useState<Folder[]>([]);
 	const [folderName, setFolderName] = useState('');
@@ -68,10 +68,14 @@ const Sidebar: FC<Props> = ({userData, setSelectedFolder}) => {
 	};
 	
 	return <>
-		{folders.map(folder => <FolderSelector key={folder.key} folder={folder} setSelected={setSelectedFolder} />)}
+		{folders.map(folder => <FolderSelector key={folder.key} folder={folder} setSelected={setSelectedFolder} isSelected={folder.key === selectedFolder?.key} />)}
 		<p className={style.label}>Add folder:</p>
-		<TextInput value={[folderName, setFolderName]} errorMessage={[folderNameError, setFolderNameError]} onSubmit={addFolder} />
-		<button onClick={addFolder}>Add folder</button>
+		<div className={style.addFolder}>
+			<div className={style.input}>
+				<TextInput value={[folderName, setFolderName]} errorMessage={[folderNameError, setFolderNameError]} onSubmit={addFolder} />
+			</div>
+			<button className={style.button} onClick={addFolder}>Add</button>
+		</div>
 	</>
 	
 };

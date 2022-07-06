@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import style from './App.module.css';
+import style from './App.module.scss';
 import LoginBox from './LoginBox';
 import Main from './Main';
 

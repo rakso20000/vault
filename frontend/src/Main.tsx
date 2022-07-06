@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import style from './Main.module.css';
+import style from './Main.module.scss';
 import Sidebar from './Sidebar';
 import {UserData} from './App';
 
@@ -18,7 +18,7 @@ const Main: FC<Props> = ({userData}) => {
 	
 	return <div className={style.main}>
 		<div className={style.sidebar}>
-			<Sidebar userData={userData} setSelectedFolder={setSelectedFolder} />
+			<Sidebar userData={userData} selectedFolder={[selectedFolder, setSelectedFolder]} />
 		</div>
 		<div className={style.content}>
 			{selectedFolder?.name}
