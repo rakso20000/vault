@@ -16,14 +16,14 @@ const Main: FC<Props> = ({userData}) => {
 	
 	const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
 	
-	return <div className={style.main}>
+	return <>
 		<div className={style.sidebar}>
 			<Sidebar userData={userData} selectedFolder={[selectedFolder, setSelectedFolder]} />
 		</div>
 		<div className={style.content}>
 			{selectedFolder?.name}
 		</div>
-	</div>;
+	</>;
 	
 };
 

@@ -1,6 +1,6 @@
 import {FC, useState} from 'react';
 import style from './LoginBox.module.scss';
-import {apiCall, SetState} from './util';
+import {apiCall, classes, SetState} from './util';
 import {hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
 import {UserData} from './App';
@@ -95,7 +95,7 @@ const LoginForm: FC<Props> = ({setUserData, setCreatingAccount}) => {
 		<TextInput value={[password, setPassword]} errorMessage={[passwordError, setPasswordError]} type="password" onSubmit={login} />
 		<button className={style.button} onClick={login}>Login</button>
 		<hr />
-		<button className={[style.button, style.switchButton].join(' ')} onClick={createAccount}>Create account</button>
+		<button className={classes(style.button, style.switchButton)} onClick={createAccount}>Create account</button>
 	</>;
 	
 };
