@@ -8,6 +8,7 @@ import './login';
 import './createAccount';
 import './getFolders';
 import './addFolder';
+import './renameFolder';
 
 const port = 14151;
 

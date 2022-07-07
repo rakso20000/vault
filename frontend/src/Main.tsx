@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import {UserData} from './App';
 
 type Folder = {
+	originalKey: string;
 	key: string;
 	name: string;
 }
@@ -18,7 +19,7 @@ const Main: FC<Props> = ({userData}) => {
 	
 	return <>
 		<div className={style.sidebar}>
-			<Sidebar userData={userData} selectedFolder={[selectedFolder, setSelectedFolder]} />
+			<Sidebar userData={userData} selectedFolderState={[selectedFolder, setSelectedFolder]} />
 		</div>
 		<div className={style.content}>
 			{selectedFolder?.name}

@@ -24,30 +24,82 @@
 	background-color: colors.$theme;
 }
 
-.folderButton:hover + .background {
+.folderButton:hover + .background,
+.folderButton:focus + .background {
 	filter: brightness(90%);
 }
 
 .folderButton {
+	position: relative;
 	z-index: 1;
 	flex-grow: 1;
+	padding: 3px;
+	min-width: 0;
 	background-color: transparent;
-	text-align: left;
-	cursor: pointer;
 	height: 37px;
 	border: none;
+	cursor: pointer;
+	text-align: left;
 	font-size: 16pt;
-	padding: 5px;
+	
+	&:focus {
+		outline: none;
+	}
+}
+
+.folderName {
+	margin: 0;
+	padding: 2px;
+	white-space: pre;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	
+	&.loading {
+		//make space for loading icon
+		width: calc(100% - 37px);
+	}
+}
+
+.folderInput {
+	margin: 0;
+	padding: 2px;
+	box-sizing: border-box;
+	width: 100%;
+	background-color: colors.$theme-light;
+	border: none;
+	text-align: left;
+	font-size: 16pt;
+	
+	&:focus {
+		outline: none;
+	}
+}
+
+.loadingIcon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 2px;
+	height: 33px;
+	
+	//alt text
+	font-size: 12pt;
+	line-height: 33px;
 }
 
 .iconButton {
 	z-index: 1;
+	flex-shrink: 0;
 	margin: 2px;
 	padding: 3px;
-	cursor: pointer;
+	min-width: 33px; //allow buttons expanding for alt text
 	height: 33px;
+	cursor: pointer;
 	border: 1px solid black;
 	background-color: colors.$accent;
+	
+	//alt text
+	font-size: 12pt;
 	
 	&:hover {
 		filter: brightness(90%);
@@ -59,5 +111,5 @@
 }
 
 .icon {
-	height: 25px;
+	height: 100%;
 }

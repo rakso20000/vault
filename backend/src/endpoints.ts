@@ -8,7 +8,7 @@ type EndpointData = {
 
 const endpoints: EndpointData[] = [];
 
-const addEndpoint = <T>(name: string, method: string, endpoint: Endpoint<T>) => {
+const addEndpoint = <T extends object>(name: string, method: string, endpoint: Endpoint<T>) => {
 	
 	if (getEndpoint(name, method) !== null)
 		throw new Error(`Endpoint ${method} ${name} already exists`);

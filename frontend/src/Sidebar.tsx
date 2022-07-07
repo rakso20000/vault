@@ -9,10 +9,10 @@ import {Folder} from './Main';
 
 type Props = {
 	userData: UserData;
-	selectedFolder: State<Folder | null>;
+	selectedFolderState: State<Folder | null>;
 };
 
-const Sidebar: FC<Props> = ({userData, selectedFolder: [selectedFolder, setSelectedFolder]}) => {
+const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 	
 	const [folders, setFolders] = useState<Folder[]>([]);
 	const [folderName, setFolderName] = useState('');
@@ -25,6 +25,7 @@ const Sidebar: FC<Props> = ({userData, selectedFolder: [selectedFolder, setSelec
 		});
 		
 		const folders: Folder[] = await Promise.all(cipherFolderNames.map(async (cipherFolderName: string) => ({
+			originalKey: cipherFolderName,
 			key: cipherFolderName,
 			name: await decryptText(cipherFolderName)
 		})));
@@ -59,6 +60,7 @@ const Sidebar: FC<Props> = ({userData, selectedFolder: [selectedFolder, setSelec
 		}
 		
 		const folder: Folder = {
+			originalKey: cipherFolderName,
 			key: cipherFolderName,
 			name: folderName
 		};
@@ -68,7 +70,7 @@ const Sidebar: FC<Props> = ({userData, selectedFolder: [selectedFolder, setSelec
 	};
 	
 	return <>
-		{folders.map(folder => <FolderSelector key={folder.key} folder={folder} setSelected={setSelectedFolder} isSelected={folder.key === selectedFolder?.key} />)}
+		{folders.map(folder => <FolderSelector key={folder.originalKey} folder={folder} foldersState={[folders, setFolders]} selectedFolderState={selectedFolderState} />)}
 		<p className={style.label}>Add folder:</p>
 		<div className={style.addFolder}>
 			<div className={style.input}>
