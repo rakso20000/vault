@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import style from './Main.module.scss';
+import style from './styles/Main.module.scss';
 import Sidebar from './Sidebar';
 import {UserData} from './App';
 

@@ -1,7 +1,7 @@
 import {FC, useState} from 'react';
 import {apiCall, State, useAsyncEffect} from './util';
 import {encryptText, decryptText} from './crypto';
-import style from './Sidebar.module.scss';
+import style from './styles/Sidebar.module.scss';
 import FolderSelector from './FolderSelector';
 import TextInput from './TextInput';
 import {UserData} from './App';

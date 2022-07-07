@@ -1,3 +1,5 @@
+@use 'colors';
+
 .input, .errorInput {
 	width: 100%;
 	box-sizing: border-box;
@@ -9,14 +11,14 @@
 }
 
 .errorInput {
-	border: 1px solid #DD403A;
+	border: 1px solid colors.$reject;
 }
 
 .errorMessage {
 	margin: 2px 0 0 0;
 	padding: 2px 2px 2px 6px;
 	border-radius: 0 0 8px 8px;
-	background-color: #DD403A;
+	background-color: colors.$reject;
 	color: white;
 	font-size: 14pt;
 }

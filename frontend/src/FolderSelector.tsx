@@ -1,5 +1,5 @@
 import {FC} from 'react';
-import style from './FolderSelector.module.scss'
+import style from './styles/FolderSelector.module.scss'
 import {Folder} from './Main';
 import {classes, SetState} from './util';
 import edit from './assets/edit.svg';

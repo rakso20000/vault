@@ -1,28 +1,27 @@
+@use 'colors';
+
 .folder {
 	position: relative;
 	margin-bottom: 10px;
 	display: flex;
-	
-	$base-color: #4287f5;
-	border-top: 2px solid lighten($base-color, 20%);
-	border-left: 2px solid lighten($base-color, 20%);
-	border-right: 2px solid darken($base-color, 20%);
-	border-bottom: 2px solid darken($base-color, 20%);
+	border-top: 2px solid lighten(colors.$theme, 20%);
+	border-left: 2px solid lighten(colors.$theme, 20%);
+	border-right: 2px solid darken(colors.$theme, 20%);
+	border-bottom: 2px solid darken(colors.$theme, 20%);
 }
 
 .selected {
-	$base-color: #4287f5;
-	border-top: 2px solid darken($base-color, 20%);
-	border-left: 2px solid darken($base-color, 20%);
-	border-right: 2px solid lighten($base-color, 20%);
-	border-bottom: 2px solid lighten($base-color, 20%);
+	border-top: 2px solid darken(colors.$theme, 20%);
+	border-left: 2px solid darken(colors.$theme, 20%);
+	border-right: 2px solid lighten(colors.$theme, 20%);
+	border-bottom: 2px solid lighten(colors.$theme, 20%);
 }
 
 .background {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background-color: #4287f5;
+	background-color: colors.$theme;
 }
 
 .folderButton:hover + .background {
@@ -48,7 +47,7 @@
 	cursor: pointer;
 	height: 33px;
 	border: 1px solid black;
-	background-color: #F4E409;
+	background-color: colors.$accent;
 	
 	&:hover {
 		filter: brightness(90%);
@@ -56,7 +55,7 @@
 }
 
 .deleteButton {
-	background-color: #DD403A;
+	background-color: colors.$reject;
 }
 
 .icon {

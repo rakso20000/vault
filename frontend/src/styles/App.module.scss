@@ -1,7 +1,9 @@
+@use 'colors';
+
 .title {
 	flex-grow: 0;
 	padding: 10px;
-	background-color: #4287f5;
+	background-color: colors.$theme;
 	font-size: 26pt;
 	font-weight: bold;
 }
