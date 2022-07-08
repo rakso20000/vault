@@ -1,0 +1,72 @@
+@use 'colors';
+
+.background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	padding-top: 20vh;
+	background-color: rgba(black, 0.6);
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.prompt {
+	margin: 20px 10px;
+	background-color: colors.$background;
+	box-shadow: 0 0 3px 2px rgba(colors.$theme, 0.65);
+}
+
+.title {
+	padding: 10px;
+	min-width: 15vw;
+	background-color: colors.$theme;
+	text-align: center;
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+.content {
+	padding: 10px;
+}
+
+.message {
+	margin: 0;
+	padding: 10px 5px;
+	width: content-box;
+	background-color: colors.$theme;
+	border: 1px solid black;
+	font-size: 14pt;
+}
+
+.buttonBar {
+	margin-top: 10px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.button {
+	cursor: pointer;
+	height: 50px;
+	border: 1px solid black;
+	font-size: 16pt;
+	
+	& + .button {
+		margin-left: 10px;
+	}
+	
+	&:hover {
+		filter: brightness(90%);
+	}
+}
+
+.neutral {
+	background-color: colors.$accent;
+}
+
+.reject {
+	background-color: colors.$reject;
+}

@@ -1,4 +1,5 @@
 import {Dispatch, SetStateAction, useEffect} from 'react';
+import {PromptData} from './Prompt';
 
 type SetState<T> = Dispatch<SetStateAction<T>>;
 type State<T> = [T, SetState<T>];
@@ -34,6 +35,25 @@ const classes = (...classNames: (string | null)[]) => {
 	
 };
 
+let addPromptData: (promptData: PromptData) => void;
+
+const updatePromptDataAdder = (adder: (promptData: PromptData) => void) => {
+	
+	addPromptData = adder;
+	
+};
+
+const displayMessage = (title: string, message: string, buttonText: string) => new Promise<boolean>(resolve => {
+	
+	addPromptData({
+		title,
+		message,
+		buttonText,
+		callback: resolve
+	});
+	
+});
+
 export type {
 	SetState,
 	State
@@ -42,5 +62,7 @@ export type {
 export {
 	apiCall,
 	useAsyncEffect,
-	classes
+	classes,
+	updatePromptDataAdder,
+	displayMessage
 };

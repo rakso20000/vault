@@ -1,7 +1,7 @@
 import {ChangeEventHandler, FC, KeyboardEventHandler, useState} from 'react';
 import style from './styles/FolderSelector.module.scss'
 import {Folder} from './Main';
-import {apiCall, classes, State} from './util';
+import {apiCall, classes, displayMessage, State} from './util';
 import editIcon from './assets/edit.svg';
 import crossIcon from './assets/cross.svg';
 import loadingIcon from './assets/loading_spinner.svg';
@@ -17,6 +17,7 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 	
 	const [isEditing, setIsEditing] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isWaitingForConfirmation, setIsWaitingForConfirmation] = useState(false);
 	const [newFolderName, setNewFolderName] = useState(folder.name);
 	
 	const isSelected = folder.key === selectedFolder?.key;
@@ -27,9 +28,9 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 		
 	};
 	
-	const edit = () => {
+	const editFolder = () => {
 		
-		if (isLoading)
+		if (isLoading || isWaitingForConfirmation)
 			return;
 		
 		setIsEditing(true);
@@ -77,6 +78,8 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 			newCipherFolderName: newKey
 		});
 		
+		//TODO error handling
+		
 		const newFolders = folders.slice();
 		const index = newFolders.findIndex(f => f.key === folder.key);
 		
@@ -88,6 +91,34 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 		
 		setFolders(newFolders);
 		setIsLoading(false);
+		
+	};
+	
+	const deleteFolder = async () => {
+		
+		if (isLoading || isWaitingForConfirmation)
+			return;
+		
+		setIsWaitingForConfirmation(true);
+		
+		const confirmed = await displayMessage('Delete Folder', `Are you sure you want to delete ${folder.name}?`, 'Delete');
+		
+		setIsWaitingForConfirmation(false);
+		
+		if (!confirmed)
+			return;
+		
+		setIsLoading(true);
+		
+		await apiCall('POST', 'deleteFolder', {
+			cipherFolderName: folder.key
+		});
+		
+		//TODO error handling
+		
+		const newFolders = folders.filter(f => f.originalKey !== folder.originalKey);
+		
+		setFolders(newFolders);
 		
 	};
 	
@@ -104,10 +135,10 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 			}
 		</button>
 		<div className={style.background} />
-		<button className={style.iconButton} onClick={edit}>
+		<button className={style.iconButton} onClick={editFolder}>
 			<img className={style.icon} src={editIcon} alt="Edit" />
 		</button>
-		<button className={classes(style.iconButton, style.deleteButton)}>
+		<button className={classes(style.iconButton, style.deleteButton)} onClick={deleteFolder}>
 			<img className={style.icon} src={crossIcon} alt="Delete" />
 		</button>
 	</div>;

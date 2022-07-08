@@ -9,6 +9,7 @@ import './createAccount';
 import './getFolders';
 import './addFolder';
 import './renameFolder';
+import './deleteFolder';
 
 const port = 14151;
 
