@@ -1,7 +1,7 @@
 type Callback<Arguments> = (args: Arguments) => (Promise<any>);
 
 type EndpointArguments = {
-	[name: string]: ('string' | 'base64');
+	[name: string]: ('string' | 'base64' | 'file');
 };
 
 type Endpoint = {

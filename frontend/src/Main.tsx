@@ -2,6 +2,7 @@ import {FC, useState} from 'react';
 import style from './styles/Main.module.scss';
 import Sidebar from './Sidebar';
 import {UserData} from './App';
+import FileArea from './FileArea';
 
 type Folder = {
 	originalKey: string;
@@ -22,7 +23,9 @@ const Main: FC<Props> = ({userData}) => {
 			<Sidebar userData={userData} selectedFolderState={[selectedFolder, setSelectedFolder]} />
 		</div>
 		<div className={style.content}>
-			{selectedFolder?.name}
+			{selectedFolder !== null ?
+				<FileArea key={selectedFolder.originalKey} folder={selectedFolder} /> : null
+			}
 		</div>
 	</>;
 	

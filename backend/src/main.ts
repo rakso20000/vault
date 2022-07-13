@@ -1,6 +1,6 @@
 import http from 'node:http';
 import {EndpointArguments, getEndpoint} from './endpoints';
-import {initDB} from './dbClient';
+import {initDB} from './db';
 import {IncomingMessage, RequestListener, ServerResponse} from 'http';
 import createHttpError, {
 	BadRequest, HttpError,
@@ -17,12 +17,16 @@ import './getFolders';
 import './addFolder';
 import './renameFolder';
 import './deleteFolder';
+import './uploadFile';
 
 const port = 14151;
 
 const parseForm = (req: IncomingMessage, expectedArgs: EndpointArguments) => new Promise<object>((resolve, reject) => {
 	
-	const args: {[name: string]: string} = {};
+	const expectingFile = Object.values(expectedArgs).includes('file');
+	
+	const args: {[name: string]: (string | Buffer)} = {};
+	let fileData: (Buffer | null) = null;
 	let rejected = false;
 	
 	const form = new Form();
@@ -55,6 +59,33 @@ const parseForm = (req: IncomingMessage, expectedArgs: EndpointArguments) => new
 		
 	});
 	
+	form.on('part', part => {
+		
+		if (!expectingFile) {
+			
+			form.emit('error', new BadRequest('unexpected file'));
+			return;
+			
+		}
+		
+		const data = new Array<any>();
+		
+		part.on('data', chunk => {
+			
+			data.push(chunk);
+			
+		});
+		
+		part.on('error', error => form.emit('error', error));
+		
+		part.on('end', () => {
+			
+			fileData = Buffer.concat(data);
+			
+		});
+		
+	});
+	
 	form.on('error', error => {
 		
 		if (rejected)
@@ -67,13 +98,41 @@ const parseForm = (req: IncomingMessage, expectedArgs: EndpointArguments) => new
 	
 	form.on('close', () => {
 		
-		for (const name in expectedArgs)
+		for (const name in expectedArgs) {
+			
+			if (expectedArgs[name] === 'file')
+				continue;
+			
 			if (args[name] === undefined) {
 				
 				reject(new BadRequest(`expected parameter ${name} of type ${expectedArgs[name]}`));
 				return;
 				
 			}
+			
+		}
+		
+		if (expectingFile) {
+			
+			if (fileData === null) {
+				
+				reject(new BadRequest('expected file'));
+				return;
+				
+			}
+			
+			const fileKey = Object.keys(expectedArgs).find(key => expectedArgs[key] === 'file');
+			
+			if (fileKey === undefined) {
+				
+				reject(new InternalServerError('fileKey cannot be undefined'));
+				return;
+				
+			}
+			
+			args[fileKey] = fileData;
+			
+		}
 		
 		resolve(args);
 		

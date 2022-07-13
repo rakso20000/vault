@@ -1,5 +1,5 @@
 import {addEndpoint} from './endpoints';
-import {db} from './dbClient';
+import {db} from './db';
 
 type Args = {
 	oldCipherFolderName: string;

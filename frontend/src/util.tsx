@@ -4,12 +4,19 @@ import {PromptData} from './Prompt';
 type SetState<T> = Dispatch<SetStateAction<T>>;
 type State<T> = [T, SetState<T>];
 
-const apiCall = async (method: string, name: string, data: object) => {
+const apiCall = async (method: string, name: string, data: object, file?: Uint8Array) => {
 	
 	const formData = new FormData();
 	
 	for (const [key, value] of Object.entries(data))
 		formData.set(key, value);
+	
+	if (file) {
+		
+		const blob = new Blob([file]);
+		formData.set('uploadedFileData', blob);
+		
+	}
 	
 	const response = await fetch(`/api/${name}`, {
 		method,

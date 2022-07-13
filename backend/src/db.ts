@@ -21,7 +21,7 @@ const setupTables = async () => {
 				id SERIAL,
 				owner TEXT NOT NULL,
 				cipher_name TEXT UNIQUE NOT NULL,
-				PRIMARY KEY(id),
+				PRIMARY KEY (id),
 				FOREIGN KEY (owner)
 					REFERENCES public.users(name)
 					ON UPDATE CASCADE
@@ -29,7 +29,22 @@ const setupTables = async () => {
 			);
 		`);
 		
-		await Promise.all([createUsers, createFolders]);
+		const createFiles = t.none(`
+			CREATE TABLE IF NOT EXISTS files (
+				id SERIAL,
+				folder INT NOT NULL,
+				cipher_name TEXT UNIQUE NOT NULL,
+				cipher_type TEXT NOT NULL,
+				oid INT UNIQUE NOT NULL,
+				PRIMARY KEY (id),
+				FOREIGN KEY (folder)
+					REFERENCES public.folders(id)
+					ON UPDATE CASCADE
+					ON DELETE CASCADE
+			);
+		`);
+		
+		await Promise.all([createUsers, createFolders, createFiles]);
 		
 	});
 	

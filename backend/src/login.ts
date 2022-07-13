@@ -1,5 +1,5 @@
 import {addEndpoint} from './endpoints';
-import {db} from './dbClient';
+import {db} from './db';
 import {NotFound, Unauthorized} from 'http-errors';
 
 type Args = {

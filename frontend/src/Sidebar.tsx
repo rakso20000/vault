@@ -85,7 +85,9 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 	};
 	
 	return <>
-		{folders.map(folder => <FolderSelector key={folder.originalKey} folder={folder} foldersState={[folders, setFolders]} selectedFolderState={selectedFolderState} />)}
+		{folders.map(folder =>
+			<FolderSelector key={folder.originalKey} folder={folder} foldersState={[folders, setFolders]} selectedFolderState={selectedFolderState} />
+		)}
 		<p className={style.label}>Add folder:</p>
 		<div className={style.addFolder}>
 			<div className={style.input}>
