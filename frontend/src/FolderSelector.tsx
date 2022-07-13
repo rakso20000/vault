@@ -1,7 +1,7 @@
 import {ChangeEventHandler, FC, KeyboardEventHandler, useState} from 'react';
 import style from './styles/FolderSelector.module.scss'
 import {Folder} from './Main';
-import {apiCall, classes, displayMessage, State} from './util';
+import {apiCall, classes, displayMessage, showError, State} from './util';
 import editIcon from './assets/edit.svg';
 import crossIcon from './assets/cross.svg';
 import loadingIcon from './assets/loading_spinner.svg';
@@ -73,12 +73,22 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 		
 		const newKey = await encryptText(newFolderName);
 		
-		await apiCall('POST', 'renameFolder', {
-			oldCipherFolderName: folder.key,
-			newCipherFolderName: newKey
-		});
-		
-		//TODO error handling
+		try {
+			
+			await apiCall('PATCH', 'renameFolder', {
+				oldCipherFolderName: folder.key,
+				newCipherFolderName: newKey
+			});
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to rename folder');
+			
+			setIsLoading(false);
+			return;
+			
+		}
 		
 		const newFolders = folders.slice();
 		const index = newFolders.findIndex(f => f.key === folder.key);
@@ -110,11 +120,21 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 		
 		setIsLoading(true);
 		
-		await apiCall('POST', 'deleteFolder', {
-			cipherFolderName: folder.key
-		});
-		
-		//TODO error handling
+		try {
+			
+			await apiCall('DELETE', 'deleteFolder', {
+				cipherFolderName: folder.key
+			});
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to delete folder');
+			
+			setIsLoading(false);
+			return;
+			
+		}
 		
 		const newFolders = folders.filter(f => f.originalKey !== folder.originalKey);
 		

@@ -1,14 +1,18 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
+import {UnprocessableEntity} from 'http-errors';
 
 type Args = {
 	username: string;
 	cipherFolderName: string;
 };
 
-addEndpoint<Args>('addFolder', 'POST', async ({username, cipherFolderName}) => {
+addEndpoint<Args>('addFolder', 'PUT', {
+	username: 'string',
+	cipherFolderName: 'base64'
+}, async ({username, cipherFolderName}) => {
 	
-	const result = await dbClient.query(`
+	const result = await db.oneOrNone(`
 		INSERT INTO folders (
 			owner,
 			cipher_name
@@ -21,14 +25,7 @@ addEndpoint<Args>('addFolder', 'POST', async ({username, cipherFolderName}) => {
 		cipherFolderName
 	]);
 	
-	if (result.rowCount === 0)
-		return {
-			success: false,
-			error: 'FOLDER_NAME_DUPLICATE'
-		};
-	
-	return {
-		success: true
-	};
+	if (result !== null)
+		throw new UnprocessableEntity('FOLDER_NAME_DUPLICATE');
 	
 });

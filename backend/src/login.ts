@@ -1,34 +1,28 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
+import {NotFound, Unauthorized} from 'http-errors';
 
 type Args = {
 	username: string;
 	hash: string;
 };
 
-addEndpoint<Args>('login', 'POST', async ({username, hash}) => {
+addEndpoint<Args>('login', 'POST', {
+	username: 'string',
+	hash: 'base64'
+}, async ({username, hash}) => {
 	
-	const response = await dbClient.query(`
+	const user = await db.oneOrNone(`
 		SELECT password_hash FROM users WHERE
 			name = $1;
 	`, [
 		username
 	]);
 	
-	if (response.rowCount === 0)
-		return {
-			success: false,
-			error: 'UNKNOWN_USER'
-		};
+	if (user === null)
+		throw new NotFound('UNKNOWN_USER');
 	
-	if (response.rows[0].password_hash !== hash)
-		return {
-			success: false,
-			error: 'INCORRECT_PASSWORD'
-		};
-	
-	return {
-		success: true
-	};
+	if (user.password_hash !== hash)
+		throw new Unauthorized('INCORRECT_PASSWORD');
 	
 });

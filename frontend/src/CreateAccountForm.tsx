@@ -1,6 +1,6 @@
 import {FC, useState} from 'react';
 import style from './styles/LoginBox.module.scss';
-import {SetState, apiCall, classes} from './util';
+import {SetState, apiCall, classes, showError} from './util';
 import {generateSalt, hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
 import backArrow from './assets/back_arrow.svg';
@@ -54,16 +54,24 @@ const CreateAccountForm : FC<Props> = ({setUserData, setCreatingAccount}) => {
 		const salt = generateSalt();
 		const hash = await hashPassword(password, salt);
 		
-		const {success, error} = await apiCall('POST', 'createAccount', {
-			username,
-			hash,
-			salt
-		});
-		
-		if (!success) {
+		try {
+			
+			await apiCall('POST', 'createAccount', {
+				username,
+				hash,
+				salt
+			});
+			
+		} catch (error) {
 			
 			if (error === 'USERNAME_TAKEN')
 				setUsernameError('Username is already taken');
+			else {
+				
+				console.error(error);
+				showError('Unknown error occurred trying to create an account');
+				
+			}
 			
 			return;
 			

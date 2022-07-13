@@ -6,13 +6,21 @@ type State<T> = [T, SetState<T>];
 
 const apiCall = async (method: string, name: string, data: object) => {
 	
+	const formData = new FormData();
+	
+	for (const [key, value] of Object.entries(data))
+		formData.set(key, value);
+	
 	const response = await fetch(`/api/${name}`, {
 		method,
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(data)
+		body: formData
 	});
+	
+	if (!response.ok)
+		throw await response.text();
+	
+	if (response.headers.get('Content-length') === '0')
+		return;
 	
 	return response.json();
 	
@@ -54,6 +62,13 @@ const displayMessage = (title: string, message: string, buttonText: string) => n
 	
 });
 
+const showError = (error: string) => {
+	
+	//TODO show proper error
+	alert(error);
+	
+};
+
 export type {
 	SetState,
 	State
@@ -64,5 +79,6 @@ export {
 	useAsyncEffect,
 	classes,
 	updatePromptDataAdder,
-	displayMessage
+	displayMessage,
+	showError
 };

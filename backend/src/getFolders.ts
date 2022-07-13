@@ -1,13 +1,15 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
 
 type Args = {
 	username: string;
 };
 
-addEndpoint<Args>('getFolders', 'POST', async ({username}) => {
+addEndpoint<Args>('getFolders', 'POST', {
+	username: 'string'
+}, async ({username}) => {
 	
-	const result = await dbClient.query(`
+	const folders = await db.manyOrNone(`
 		SELECT cipher_name FROM folders WHERE
 			owner = $1
 		ORDER BY id;
@@ -15,11 +17,6 @@ addEndpoint<Args>('getFolders', 'POST', async ({username}) => {
 		username
 	]);
 	
-	const cipherFolderNames = result.rows.map(row => row.cipher_name);
-	
-	return {
-		success: true,
-		cipherFolderNames
-	};
+	return folders.map(folder => folder.cipher_name);
 	
 });

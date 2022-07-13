@@ -1,6 +1,6 @@
 import {FC, useState} from 'react';
 import style from './styles/LoginBox.module.scss';
-import {apiCall, classes, SetState} from './util';
+import {apiCall, classes, SetState, showError} from './util';
 import {hashPassword, calculateKey} from './crypto';
 import TextInput from './TextInput';
 import {UserData} from './App';
@@ -41,14 +41,24 @@ const LoginForm: FC<Props> = ({setUserData, setCreatingAccount}) => {
 		if (username === '' || password === '')
 			return;
 		
-		let {success, error, salt} = await apiCall('POST', 'getUserSalt', {
-			username
-		});
+		let salt: string;
 		
-		if (!success) {
+		try {
+			
+			salt = await apiCall('POST', 'getUserSalt', {
+				username
+			});
+			
+		} catch (error) {
 			
 			if (error === 'UNKNOWN_USER')
 				setUsernameError('Unknown user');
+			else {
+				
+				console.error(error);
+				showError('Unknown error occurred trying to login');
+				
+			}
 			
 			return;
 			
@@ -56,17 +66,25 @@ const LoginForm: FC<Props> = ({setUserData, setCreatingAccount}) => {
 		
 		const hash = await hashPassword(password, salt);
 		
-		({success, error} = await apiCall('POST', 'login', {
-			username,
-			hash
-		}));
-		
-		if (!success) {
+		try {
+			
+			await apiCall('POST', 'login', {
+				username,
+				hash
+			});
+			
+		} catch (error) {
 			
 			if (error === 'UNKNOWN_USER')
 				setUsernameError('Unknown user');
 			else if (error === 'INCORRECT_PASSWORD')
 				setPasswordError('Incorrect password');
+			else {
+				
+				console.error(error);
+				showError('Unknown error occurred trying to login');
+				
+			}
 			
 			return;
 			

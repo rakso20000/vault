@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import {apiCall, State, useAsyncEffect} from './util';
+import {apiCall, showError, State, useAsyncEffect} from './util';
 import {encryptText, decryptText} from './crypto';
 import style from './styles/Sidebar.module.scss';
 import FolderSelector from './FolderSelector';
@@ -20,9 +20,22 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 	
 	useAsyncEffect(async () => {
 		
-		const {cipherFolderNames} = await apiCall('POST', 'getFolders', {
-			username: userData.username
-		});
+		let cipherFolderNames: string[];
+		
+		try {
+			
+			cipherFolderNames = await apiCall('POST', 'getFolders', {
+				username: userData.username
+			});
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to load folders');
+			
+			return;
+			
+		}
 		
 		const folders: Folder[] = await Promise.all(cipherFolderNames.map(async (cipherFolderName: string) => ({
 			originalKey: cipherFolderName,
@@ -45,15 +58,17 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 		
 		const cipherFolderName = await encryptText(folderName);
 		
-		const {success, error} = await apiCall('POST', 'addFolder', {
-			username: userData.username,
-			cipherFolderName
-		});
-		
-		if (!success) {
+		try {
 			
-			if (error === 'FOLDER_NAME_DUPLICATE')
-				setFolderNameError('FolderSelector already exists');
+			await apiCall('POST', 'addFolder', {
+				username: userData.username,
+				cipherFolderName
+			});
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to create folder');
 			
 			return;
 			

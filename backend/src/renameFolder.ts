@@ -1,14 +1,17 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
 
 type Args = {
 	oldCipherFolderName: string;
 	newCipherFolderName: string;
 };
 
-addEndpoint<Args>('renameFolder', 'POST', async ({oldCipherFolderName, newCipherFolderName}) => {
+addEndpoint<Args>('renameFolder', 'PATCH', {
+	oldCipherFolderName: 'string',
+	newCipherFolderName: 'string'
+}, async ({oldCipherFolderName, newCipherFolderName}) => {
 	
-	await dbClient.query(`
+	await db.none(`
 		UPDATE folders SET
 			cipher_name = $1
 		WHERE
@@ -17,9 +20,5 @@ addEndpoint<Args>('renameFolder', 'POST', async ({oldCipherFolderName, newCipher
 		newCipherFolderName,
 		oldCipherFolderName
 	]);
-	
-	return {
-		success: true
-	};
 	
 });

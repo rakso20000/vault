@@ -1,5 +1,6 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
+import {UnprocessableEntity} from 'http-errors';
 
 type Args = {
 	username: string;
@@ -7,9 +8,13 @@ type Args = {
 	salt: string;
 };
 
-addEndpoint<Args>('createAccount', 'POST', async ({username, hash, salt}) => {
+addEndpoint<Args>('createAccount', 'PUT', {
+	username: 'string',
+	hash: 'base64',
+	salt: 'base64'
+}, async ({username, hash, salt}) => {
 	
-	const result = await dbClient.query(`
+	const user = await db.oneOrNone(`
 		INSERT INTO users (
 			name,
 			password_hash,
@@ -25,14 +30,7 @@ addEndpoint<Args>('createAccount', 'POST', async ({username, hash, salt}) => {
 		salt
 	]);
 	
-	if (result.rowCount === 0)
-		return {
-			success: false,
-			error: 'USERNAME_TAKEN'
-		};
-	
-	return {
-		success: true
-	};
+	if (user === null)
+		throw new UnprocessableEntity('USERNAME_TAKEN');
 	
 });

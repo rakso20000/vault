@@ -1,30 +1,40 @@
-type Endpoint<Arguments> = (args: Arguments) => Promise<Object>;
+type Callback<Arguments> = (args: Arguments) => (Promise<any>);
 
-type EndpointData = {
-	name: string;
-	method: string;
-	endpoint: Endpoint<any>;
+type EndpointArguments = {
+	[name: string]: ('string' | 'base64');
 };
 
-const endpoints: EndpointData[] = [];
+type Endpoint = {
+	name: string;
+	method: string;
+	args: EndpointArguments;
+	callback: Callback<any>;
+};
 
-const addEndpoint = <T extends object>(name: string, method: string, endpoint: Endpoint<T>) => {
+const endpoints: Endpoint[] = [];
+
+const addEndpoint = <T extends object>(name: string, method: string, args: EndpointArguments, callback: Callback<T>) => {
 	
-	if (getEndpoint(name, method) !== null)
-		throw new Error(`Endpoint ${method} ${name} already exists`);
+	if (getEndpoint(name) !== null)
+		throw new Error(`Endpoint ${name} already exists`);
 	
 	endpoints.push({
 		name,
 		method,
-		endpoint
+		args,
+		callback
 	});
 	
 };
 
-const getEndpoint = (name: string, method: string): Endpoint<unknown> | null => {
+const getEndpoint = (name: string): Endpoint | null => {
 	
-	return endpoints.find(endpoint => endpoint.name === name && endpoint.method === method)?.endpoint ?? null;
+	return endpoints.find(endpoint => endpoint.name === name) ?? null;
 	
+};
+
+export type {
+	EndpointArguments
 };
 
 export {

@@ -1,30 +1,25 @@
 import {addEndpoint} from './endpoints';
-import {dbClient} from './dbClient';
+import {db} from './dbClient';
+import {NotFound} from 'http-errors';
 
 type Args = {
 	username: string;
 };
 
-addEndpoint<Args>('getUserSalt', 'POST', async ({username}) => {
+addEndpoint<Args>('getUserSalt', 'POST', {
+	username: 'string'
+}, async ({username}) => {
 	
-	const response = await dbClient.query(`
+	const user = await db.oneOrNone(`
 		SELECT password_salt FROM users WHERE
 			name = $1;
 	`, [
 		username
 	]);
 	
-	if (response.rowCount === 0)
-		return {
-			success: false,
-			error: 'UNKNOWN_USER'
-		};
+	if (user === null)
+		throw new NotFound('UNKNOWN_USER');
 	
-	const salt = response.rows[0].password_salt;
-	
-	return {
-		success: true,
-		salt
-	};
+	return user.password_salt;
 	
 });
