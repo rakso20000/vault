@@ -58,7 +58,7 @@ const FileArea: FC<Props> = ({folder}) => {
 					name,
 					type,
 					origin: 'server',
-					isLoading: true
+					isLoading: type.startsWith('image/')
 				});
 				
 			}));
