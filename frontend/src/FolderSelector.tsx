@@ -1,7 +1,7 @@
 import {ChangeEventHandler, FC, KeyboardEventHandler, useState} from 'react';
 import style from './styles/FolderSelector.module.scss'
 import {Folder} from './Main';
-import {apiCall, classes, displayMessage, showError, State} from './util';
+import {apiCall, classes, displayMessage, SetState, showError, State} from './util';
 import editIcon from './assets/edit.svg';
 import crossIcon from './assets/cross.svg';
 import loadingIcon from './assets/loading_spinner.svg';
@@ -9,11 +9,11 @@ import {encryptText} from './crypto';
 
 type Props = {
 	folder: Folder;
-	foldersState: State<Folder[]>;
+	setFolders: SetState<Folder[]>;
 	selectedFolderState: State<Folder | null>;
 };
 
-const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders], selectedFolderState: [selectedFolder, setSelectedFolder]}) => {
+const FolderSelector: FC<Props> = ({folder, setFolders, selectedFolderState: [selectedFolder, setSelectedFolder]}) => {
 	
 	const [isEditing, setIsEditing] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -90,16 +90,12 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 			
 		}
 		
-		const newFolders = folders.slice();
-		const index = newFolders.findIndex(f => f.key === folder.key);
-		
-		newFolders[index] = {
-			originalKey: folder.originalKey,
+		setFolders(prevFolders => prevFolders.map(f => f.originalKey === folder.originalKey ? {
+			...f,
 			key: newKey,
 			name: newFolderName
-		};
+		} : f));
 		
-		setFolders(newFolders);
 		setIsLoading(false);
 		
 	};
@@ -136,9 +132,8 @@ const FolderSelector: FC<Props> = ({folder, foldersState: [folders, setFolders],
 			
 		}
 		
-		const newFolders = folders.filter(f => f.originalKey !== folder.originalKey);
-		
-		setFolders(newFolders);
+		setFolders(prevFolders => prevFolders.filter(f => f.originalKey !== folder.originalKey));
+		setSelectedFolder(null);
 		
 	};
 	
