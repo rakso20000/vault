@@ -57,7 +57,8 @@ const FileArea: FC<Props> = ({folder}) => {
 					key: cipherFile.name,
 					name,
 					type,
-					uploaded: true
+					uploaded: true,
+					downloaded: false
 				});
 				
 			}));
@@ -97,22 +98,21 @@ const FileArea: FC<Props> = ({folder}) => {
 			
 		}
 		
-		
 	};
 	
 	const uploadFile = async (fileData: FileData) => {
 		
-		const {key, type, file} = fileData;
+		const {key, type, data} = fileData;
 		
-		if (file === undefined)
-			throw new Error('file should not be undefined');
+		if (data === undefined)
+			throw new Error('data should not be undefined');
 		
 		const [
 			cipherFileType,
 			encryptedFile
 		] = await Promise.all([
 			encryptText(type),
-			encryptData(await file.arrayBuffer())
+			encryptData(await data.arrayBuffer())
 		]);
 		
 		try {
@@ -162,11 +162,12 @@ const FileArea: FC<Props> = ({folder}) => {
 			key: await encryptText(file.name),
 			name: file.name,
 			type: file.type,
-			file,
-			uploaded: false
+			data: file,
+			uploaded: false,
+			downloaded: true
 		})));
 		
-		setFiles(files.concat(newFiles));
+		setFiles(prevFiles => prevFiles.concat(newFiles));
 		
 		for (const fileData of newFiles)
 			uploadFile(fileData).catch(console.error);
@@ -175,7 +176,7 @@ const FileArea: FC<Props> = ({folder}) => {
 	
 	return <div className={classes(style.main)} onDragEnter={handleDrag} onDragOver={handleDrag}>
 		{files.map(file =>
-			<FileSelector key={file.key} fileData={file} folder={folder} />
+			<FileSelector key={file.key} fileData={file} setFiles={setFiles} />
 		)}
 		{isDragTarget ?
 			<div className={style.dragQueen} onDragEnter={handleDrag} onDragOver={handleDrag} onDragLeave={handleDrag} onDrop={handleDrop} /> : null

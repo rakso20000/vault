@@ -169,11 +169,34 @@ const encryptData = async (data: ArrayBuffer) => {
 	
 };
 
+const decryptData = async (cipherdata: ArrayBuffer) => {
+	
+	const key = await keyPromise;
+	
+	const cipherDataArray = new Uint8Array(cipherdata);
+	
+	const iv = cipherDataArray.slice(0, 12);
+	const cipherContent = cipherDataArray.slice(12);
+	
+	const data = await subtle.decrypt(
+		{
+			name: 'AES-GCM',
+			iv
+		},
+		key,
+		cipherContent
+	);
+	
+	return new Uint8Array(data);
+	
+};
+
 export {
 	generateSalt,
 	hashPassword,
 	calculateKey,
 	encryptText,
 	decryptText,
-	encryptData
+	encryptData,
+	decryptData
 };

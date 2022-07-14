@@ -19,6 +19,7 @@ import './renameFolder';
 import './deleteFolder';
 import './uploadFile';
 import './getFiles';
+import './downloadFile';
 
 const port = 14151;
 
@@ -71,19 +72,9 @@ const parseForm = (req: IncomingMessage, expectedArgs: EndpointArguments) => new
 		
 		const data = new Array<any>();
 		
-		part.on('data', chunk => {
-			
-			data.push(chunk);
-			
-		});
-		
+		part.on('data', chunk => data.push(chunk));
+		part.on('end', () => fileData = Buffer.concat(data));
 		part.on('error', error => form.emit('error', error));
-		
-		part.on('end', () => {
-			
-			fileData = Buffer.concat(data);
-			
-		});
 		
 	});
 	
@@ -169,11 +160,18 @@ const handleAPIRequest = async (req: IncomingMessage, res: ServerResponse) => {
 	const response = await endpoint.callback(args);
 	
 	res.setHeader('Cache-Control', 'no-store');
-	res.setHeader('Content-type', 'application/json');
 	
-	if (response !== undefined)
+	if (response instanceof Buffer) {
+		
+		res.setHeader('Content-type', 'application/octet-stream');
+		res.end(response);
+		
+	} else if (response !== undefined) {
+		
+		res.setHeader('Content-type', 'application/json');
 		res.end(JSON.stringify(response));
-	else
+		
+	} else
 		res.end();
 	
 };
