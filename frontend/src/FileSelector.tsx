@@ -1,10 +1,11 @@
 import {FC} from 'react';
 import style from './styles/FileSelector.module.scss';
-import {apiCall, SetState, showError, useAsyncEffect} from './util';
+import {apiCall, classes, SetState, showError, useAsyncEffect} from './util';
 import {decryptData} from './crypto';
 import fileIcon from './assets/file.svg';
 import loadingIcon from './assets/loading_spinner.svg';
 import downloadIcon from './assets/download.svg';
+import crossIcon from './assets/cross.svg';
 
 type FileData = {
 	key: string;
@@ -38,6 +39,7 @@ const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLo
 			
 			console.error(error);
 			showError('Unknown error occurred trying to download file');
+			
 			return;
 			
 		}
@@ -97,6 +99,26 @@ const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLo
 		
 	};
 	
+	const deleteFile = async () => {
+		
+		try {
+			
+			await apiCall('DELETE', 'deleteFile', {
+				cipherFileName: key
+			});
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to delete file');
+			
+			return;
+		}
+		
+		setFiles(prevFiles => prevFiles.filter(file => file.key !== key));
+		
+	};
+	
 	return <div className={style.main}>
 		<div className={style.imageContainer}>
 			{!showPreview ?
@@ -108,8 +130,11 @@ const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLo
 		</div>
 		<p className={style.label}>{origin === 'server' || !isLoading ? name : 'Uploading'}</p>
 		<div className={style.overlay}>
-			<button className={style.iconButton} onClick={download}>
-				<img className={style.icon} src={downloadIcon} alt="Edit" />
+			<button className={classes(style.iconButton, style.downloadButton)} onClick={download}>
+				<img className={style.icon} src={downloadIcon} alt="Download" />
+			</button>
+			<button className={classes(style.iconButton, style.deleteButton)} onClick={deleteFile}>
+				<img className={style.icon} src={crossIcon} alt="Delete" />
 			</button>
 		</div>
 	</div>;

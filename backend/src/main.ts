@@ -20,6 +20,7 @@ import './deleteFolder';
 import './uploadFile';
 import './getFiles';
 import './downloadFile';
+import './deleteFile';
 
 const port = 14151;
 

@@ -28,7 +28,7 @@ addEndpoint<Args>('deleteFolder', 'DELETE', {
 		
 		await tx.none(`
 			DELETE FROM folders WHERE
-					cipher_name = $1;
+				cipher_name = $1;
 		`, [
 			cipherFolderName
 		]);
