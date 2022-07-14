@@ -1,13 +1,5 @@
 @use 'colors';
 
-.sidebar {
-	flex-grow: 0;
-	width: 300px;
-	border-top: 2px solid black;
-	padding: 5px;
-	background-color: colors.$theme;
-}
-
 .content {
 	flex-grow: 1;
 	display: flex;

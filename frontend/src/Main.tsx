@@ -19,9 +19,7 @@ const Main: FC<Props> = ({userData}) => {
 	const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
 	
 	return <>
-		<div className={style.sidebar}>
-			<Sidebar userData={userData} selectedFolderState={[selectedFolder, setSelectedFolder]} />
-		</div>
+		<Sidebar userData={userData} selectedFolderState={[selectedFolder, setSelectedFolder]} />
 		<div className={style.content}>
 			{selectedFolder !== null ?
 				<FileArea key={selectedFolder.originalKey} folder={selectedFolder} /> : null

@@ -1,5 +1,13 @@
 @use 'colors';
 
+.sidebar {
+	flex-grow: 0;
+	width: 300px;
+	border-top: 2px solid black;
+	padding: 5px;
+	background-color: colors.$theme;
+}
+
 .label {
 	margin: 10px 0 2px 0;
 	font-size: 16pt;
@@ -21,8 +29,53 @@
 	background-color: colors.$accent;
 	font-size: 16pt;
 	padding: 5px;
+	
+	&:hover {
+		filter: brightness(90%);
+	}
 }
 
-.button:hover {
-	filter: brightness(90%);
+.sidebarButton {
+	display: none;
+	cursor: pointer;
+	padding: 3px;
+	min-width: 33px;
+	height: 33px;
+	border: none;
+	border-top: 2px solid black;
+	border-bottom-right-radius: 10px;
+	background-color: colors.$theme;
+	
+	&:hover {
+		filter: brightness(90%);
+	}
+}
+
+.sidebarBackButton {
+	border: 1px solid black;
+	border-radius: 0;
+	background-color: colors.$accent;
+	margin-bottom: 5px;
+}
+
+.icon {
+	height: 100%;
+}
+
+@media (max-width: 840px) {
+	.sidebar {
+		position: absolute;
+		left: 0;
+		height: 100%;
+		z-index: 1;
+		visibility: hidden;
+		
+		&.open {
+			visibility: initial;
+		}
+	}
+	
+	.sidebarButton {
+		display: block;
+	}
 }
