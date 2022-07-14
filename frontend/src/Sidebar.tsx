@@ -56,11 +56,18 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 			
 		}
 		
+		if (folders.some(folder => folder.name === folderName)) {
+			
+			setFolderNameError('Duplicate folder name');
+			return;
+			
+		}
+		
 		const cipherFolderName = await encryptText(folderName);
 		
 		try {
 			
-			await apiCall('POST', 'addFolder', {
+			await apiCall('PUT', 'addFolder', {
 				username: userData.username,
 				cipherFolderName
 			});
@@ -74,13 +81,15 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState}) => {
 			
 		}
 		
+		setFolderName('');
+		
 		const folder: Folder = {
 			originalKey: cipherFolderName,
 			key: cipherFolderName,
 			name: folderName
 		};
 		
-		setFolders([...folders, folder]);
+		setFolders(prevFolders => [...prevFolders, folder]);
 		
 	};
 	
