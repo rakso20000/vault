@@ -1,9 +1,10 @@
-import {DragEventHandler, FC, useEffect, useState} from 'react';
+import {ChangeEventHandler, DragEventHandler, FC, useEffect, useState} from 'react';
 import style from './styles/FileArea.module.scss';
 import {Folder} from './Main';
 import {apiCall, classes, showError, useAsyncEffect} from './util';
 import FileSelector, {FileData} from './FileSelector';
 import {decryptText, encryptData, encryptText} from './crypto';
+import plusIcon from './assets/plus.svg';
 
 type Props = {
 	folder: Folder;
@@ -138,18 +139,13 @@ const FileArea: FC<Props> = ({folder}) => {
 		
 	};
 	
-	const handleDrop: DragEventHandler<HTMLDivElement> = async event => {
-		
-		event.preventDefault();
-		event.stopPropagation();
-		
-		setIsDragTarget(false);
+	const addFiles = async (files: FileList) => {
 		
 		const selectedFiles: File[] = [];
 		
-		for (let i = 0; i < event.dataTransfer.files.length; ++i) {
+		for (let i = 0; i < files.length; ++i) {
 			
-			const file = event.dataTransfer.files.item(i);
+			const file = files.item(i);
 			
 			if (file === null)
 				continue;
@@ -174,10 +170,36 @@ const FileArea: FC<Props> = ({folder}) => {
 		
 	};
 	
+	const handleDrop: DragEventHandler<HTMLDivElement> = async event => {
+		
+		event.preventDefault();
+		event.stopPropagation();
+		
+		setIsDragTarget(false);
+		
+		await addFiles(event.dataTransfer.files);
+		
+	};
+	
+	const handleChange: ChangeEventHandler<HTMLInputElement> = async event => {
+		
+		const files = event.target.files;
+		
+		if (files === null)
+			return;
+		
+		await addFiles(files);
+		
+	};
+	
 	return <div className={classes(style.main)} onDragEnter={handleDrag} onDragOver={handleDrag}>
 		{files.map(file =>
 			<FileSelector key={file.key} fileData={file} setFiles={setFiles} />
 		)}
+		<label className={style.uploadButton}>
+			<input type="file" onChange={handleChange} />
+			<img src={plusIcon} alt="Upload" />
+		</label>
 		{isDragTarget ?
 			<div className={style.dragQueen} onDragEnter={handleDrag} onDragOver={handleDrag} onDragLeave={handleDrag} onDrop={handleDrop} /> : null
 		}

@@ -14,6 +14,34 @@
 	gap: 10px;
 }
 
+.uploadButton {
+	cursor: pointer;
+	flex-shrink: 0;
+	width: 200px;
+	height: 200px;
+	padding: 10px;
+	background-color: colors.$accent;
+	box-sizing: border-box;
+	border: 1px solid black;
+	border-radius: 10px;
+	text-align: center;
+	line-height: 178px;
+	font-weight: bold;
+	font-size: 100pt;
+	
+	&:hover {
+		filter: brightness(90%);
+	}
+	
+	& input {
+		display: none;
+	}
+	
+	& img {
+		height: 100%;
+	}
+}
+
 .dragQueen {
 	position: absolute;
 	top: 0;
