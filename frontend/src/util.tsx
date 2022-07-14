@@ -26,13 +26,14 @@ const apiCall = async (method: string, name: string, data: object, file?: Uint8A
 	if (!response.ok)
 		throw await response.text();
 	
-	if (response.headers.get('Content-length') === '0')
-		return;
-	
-	if (response.headers.get('Content-type') === 'application/octet-stream')
-		return response.arrayBuffer();
-	
-	return response.json();
+	switch (response.headers.get('Content-type')) {
+		case 'application/json':
+			return response.json();
+		case 'application/octet-stream':
+			return response.arrayBuffer();
+		default:
+			return;
+	}
 	
 };
 
