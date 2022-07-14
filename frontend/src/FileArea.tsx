@@ -1,9 +1,9 @@
 import {DragEventHandler, FC, useEffect, useState} from 'react';
 import style from './styles/FileArea.module.scss';
 import {Folder} from './Main';
-import {apiCall, classes, showError} from './util';
+import {apiCall, classes, showError, useAsyncEffect} from './util';
 import FileSelector, {FileData} from './FileSelector';
-import {encryptData, encryptText} from './crypto';
+import {decryptText, encryptData, encryptText} from './crypto';
 
 type Props = {
 	folder: Folder;
@@ -35,6 +35,44 @@ const FileArea: FC<Props> = ({folder}) => {
 		
 	}, []);
 	
+	useAsyncEffect(async () => {
+		
+		try {
+			
+			const cipherFiles: {name: string, type: string}[] = await apiCall('POST', 'getFiles', {
+				cipherFolderName: folder.key
+			});
+			
+			const files: FileData[] = await Promise.all(cipherFiles.map(async cipherFile => {
+				
+				const [
+					name,
+					type
+				] = await Promise.all([
+					decryptText(cipherFile.name),
+					decryptText(cipherFile.type)
+				]);
+				
+				return({
+					key: cipherFile.name,
+					name,
+					type,
+					uploaded: true
+				});
+				
+			}));
+			
+			setFiles(prevFiles => [...files, ...prevFiles]);
+			
+		} catch (error) {
+			
+			console.error(error);
+			showError('Unknown error occurred trying to load files');
+			
+		}
+		
+	}, [folder.originalKey]);
+	
 	const handleDrag: DragEventHandler<HTMLDivElement> = event => {
 		
 		event.preventDefault();
@@ -65,6 +103,9 @@ const FileArea: FC<Props> = ({folder}) => {
 	const uploadFile = async (fileData: FileData) => {
 		
 		const {key, type, file} = fileData;
+		
+		if (file === undefined)
+			throw new Error('file should not be undefined');
 		
 		const [
 			cipherFileType,

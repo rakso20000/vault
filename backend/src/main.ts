@@ -18,6 +18,7 @@ import './addFolder';
 import './renameFolder';
 import './deleteFolder';
 import './uploadFile';
+import './getFiles';
 
 const port = 14151;
 

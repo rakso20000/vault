@@ -1,7 +1,6 @@
 import {addEndpoint} from './endpoints';
 import {db} from './db';
 import {LargeObjectManager} from 'pg-large-object';
-import {type} from 'os';
 
 type Args = {
 	cipherFolderName: string;
@@ -21,7 +20,7 @@ addEndpoint<Args>('uploadFile', 'PUT', {
 		
 		const {id: folderID} = await tx.one<{id: number}>(`
 			SELECT id FROM folders WHERE
-				cipher_name = $1
+				cipher_name = $1;
 		`, [
 			cipherFolderName
 		]);

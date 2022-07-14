@@ -1,27 +1,25 @@
-import {FC, useEffect} from 'react';
+import {FC} from 'react';
 import style from './styles/FileSelector.module.scss';
-import {Folder} from './Main';
 
 type FileData = {
 	key: string;
 	name: string;
 	type: string;
-	file: File;
+	file?: File;
 	uploaded: boolean;
 };
 
 type Props = {
 	fileData: FileData;
-	folder: Folder;
 };
 
-const FileSelector: FC<Props> = ({fileData, folder}) => {
+const FileSelector: FC<Props> = ({fileData}) => {
 	
 	const {name, type, file, uploaded} = fileData;
 	
 	let url: (string | null) = null;
 	
-	if (type.startsWith('image/'))
+	if (type.startsWith('image/') && file !== undefined)
 		url = URL.createObjectURL(file);
 	
 	return <div className={style.main}>
