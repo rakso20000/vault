@@ -57,13 +57,13 @@ const FileArea: FC<Props> = ({folder}) => {
 					key: cipherFile.name,
 					name,
 					type,
-					uploaded: true,
-					downloaded: false
+					origin: 'server',
+					isLoading: true
 				});
 				
 			}));
 			
-			setFiles(prevFiles => [...files, ...prevFiles]);
+			setFiles(prevFiles => [...files, ...prevFiles.filter(file => file.origin === 'client')]);
 			
 		} catch (error) {
 			
@@ -134,7 +134,7 @@ const FileArea: FC<Props> = ({folder}) => {
 			
 		}
 		
-		setFiles(prevFiles => prevFiles.map(file => file.key === key ? {...file, uploaded: true} : file));
+		setFiles(prevFiles => prevFiles.map(file => file.key === key ? {...file, isLoading: false} : file));
 		
 	};
 	
@@ -163,8 +163,8 @@ const FileArea: FC<Props> = ({folder}) => {
 			name: file.name,
 			type: file.type,
 			data: file,
-			uploaded: false,
-			downloaded: true
+			origin: 'client',
+			isLoading: true
 		})));
 		
 		setFiles(prevFiles => prevFiles.concat(newFiles));

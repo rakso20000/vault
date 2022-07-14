@@ -8,8 +8,8 @@ type FileData = {
 	name: string;
 	type: string;
 	data?: Blob;
-	uploaded: boolean;
-	downloaded: boolean;
+	origin: 'server' | 'client';
+	isLoading: boolean
 };
 
 type Props = {
@@ -17,11 +17,11 @@ type Props = {
 	setFiles: SetState<FileData[]>;
 };
 
-const FileSelector: FC<Props> = ({fileData: {key, name, type, data, uploaded, downloaded}, setFiles}) => {
+const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLoading}, setFiles}) => {
 	
 	useAsyncEffect(async () => {
 		
-		if (downloaded || !type.startsWith('image/'))
+		if (!isLoading || origin === 'client' || !type.startsWith('image/'))
 			return;
 		
 		try {
@@ -56,7 +56,7 @@ const FileSelector: FC<Props> = ({fileData: {key, name, type, data, uploaded, do
 				<img className={style.imagePreview} src={url}  alt=""/> : null
 			}
 		</div>
-		<p className={style.label}>{uploaded ? name : 'Uploading'}</p>
+		<p className={style.label}>{origin === 'server' || !isLoading ? name : 'Uploading'}</p>
 	</div>;
 	
 };
