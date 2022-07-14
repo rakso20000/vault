@@ -20,7 +20,7 @@ const FolderSelector: FC<Props> = ({folder, setFolders, selectedFolderState: [se
 	const [isWaitingForConfirmation, setIsWaitingForConfirmation] = useState(false);
 	const [newFolderName, setNewFolderName] = useState(folder.name);
 	
-	const isSelected = folder.key === selectedFolder?.key;
+	const isSelected = folder.originalKey === selectedFolder?.originalKey;
 	
 	const select = () => {
 		
