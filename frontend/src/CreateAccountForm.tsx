@@ -56,7 +56,7 @@ const CreateAccountForm : FC<Props> = ({setUserData, setCreatingAccount}) => {
 		
 		try {
 			
-			await apiCall('POST', 'createAccount', {
+			await apiCall('PUT', 'createAccount', {
 				username,
 				hash,
 				salt
