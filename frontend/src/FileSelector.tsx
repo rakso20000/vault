@@ -2,6 +2,8 @@ import {FC} from 'react';
 import style from './styles/FileSelector.module.scss';
 import {apiCall, SetState, showError, useAsyncEffect} from './util';
 import {decryptData} from './crypto';
+import fileIcon from './assets/file.svg';
+import loadingIcon from './assets/loading_spinner.svg';
 
 type FileData = {
 	key: string;
@@ -19,9 +21,11 @@ type Props = {
 
 const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLoading}, setFiles}) => {
 	
+	const showPreview = type.startsWith('image/');
+	
 	useAsyncEffect(async () => {
 		
-		if (!isLoading || origin === 'client' || !type.startsWith('image/'))
+		if (!showPreview || !isLoading || origin === 'client')
 			return;
 		
 		try {
@@ -47,13 +51,16 @@ const FileSelector: FC<Props> = ({fileData: {key, name, type, data, origin, isLo
 	
 	let url: (string | null) = null;
 	
-	if (type.startsWith('image/') && data !== undefined)
+	if (showPreview && data !== undefined)
 		url = URL.createObjectURL(data);
 	
 	return <div className={style.main}>
 		<div className={style.imageContainer}>
-			{url !== null ?
-				<img className={style.imagePreview} src={url}  alt=""/> : null
+			{!showPreview ?
+				<img className={style.imagePreview} src={fileIcon} alt="" /> :
+				url == null ?
+					<img className={style.imagePreview} src={loadingIcon} alt="" /> :
+					<img className={style.imagePreview} src={url}  alt="" />
 			}
 		</div>
 		<p className={style.label}>{origin === 'server' || !isLoading ? name : 'Uploading'}</p>
