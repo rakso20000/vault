@@ -122,19 +122,21 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState: [selectedFolder, set
 		<button className={style.sidebarButton} onClick={openSidebar}>
 			<img className={style.icon} src={menuIcon} alt="Sidebar" />
 		</button>
-		<div className={classes(style.sidebar, isSidebarOpen ? style.open : null)}>
-			<button className={classes(style.sidebarButton, style.sidebarBackButton)} onClick={closeSidebar}>
-				<img className={style.icon} src={backIcon} alt="Close" />
-			</button>
-			{folders.map(folder =>
-				<FolderSelector key={folder.originalKey} folder={folder} setFolders={setFolders} selectedFolderState={[selectedFolder, setSelectedFolder]} />
-			)}
-			<p className={style.label}>Add folder:</p>
-			<div className={style.addFolder}>
-				<div className={style.input}>
-					<TextInput value={[folderName, setFolderName]} errorMessage={[folderNameError, setFolderNameError]} onSubmit={addFolder} />
+		<div className={style.sidebarContainer}>
+			<div className={classes(style.sidebar, isSidebarOpen ? style.open : null)}>
+				<button className={classes(style.sidebarButton, style.sidebarBackButton)} onClick={closeSidebar}>
+					<img className={style.icon} src={backIcon} alt="Close" />
+				</button>
+				{folders.map(folder =>
+					<FolderSelector key={folder.originalKey} folder={folder} setFolders={setFolders} selectedFolderState={[selectedFolder, setSelectedFolder]} />
+				)}
+				<p className={style.label}>Add folder:</p>
+				<div className={style.addFolder}>
+					<div className={style.input}>
+						<TextInput value={[folderName, setFolderName]} errorMessage={[folderNameError, setFolderNameError]} onSubmit={addFolder} />
+					</div>
+					<button className={style.button} onClick={addFolder}>Add</button>
 				</div>
-				<button className={style.button} onClick={addFolder}>Add</button>
 			</div>
 		</div>
 	</>;
