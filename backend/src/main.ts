@@ -9,6 +9,7 @@ import createHttpError, {
 	UnsupportedMediaType
 } from 'http-errors';
 import {Form} from 'multiparty';
+import {configPromise} from './config';
 
 import './getUserSalt';
 import './login';
@@ -21,8 +22,6 @@ import './uploadFile';
 import './getFiles';
 import './downloadFile';
 import './deleteFile';
-
-const port = 14151;
 
 const parseForm = (req: IncomingMessage, expectedArgs: EndpointArguments) => new Promise<object>((resolve, reject) => {
 	
@@ -207,12 +206,14 @@ const handleRequest: RequestListener = async (req, res) => {
 
 const init = async () => {
 	
+	const config = await configPromise;
+	
 	await initDB();
 	
 	const server = http.createServer(handleRequest);
-	server.listen(port, '0.0.0.0');
+	server.listen(config.port, '0.0.0.0');
 	
-	console.log(`Started server on port ${port}`);
+	console.log(`Started server on port ${config.port}`);
 	
 };
 

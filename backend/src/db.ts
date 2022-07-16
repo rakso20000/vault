@@ -1,5 +1,6 @@
 import pgPromise, {IDatabase} from 'pg-promise';
 import {IClient} from 'pg-promise/typescript/pg-subset';
+import {configPromise} from './config';
 
 let db: IDatabase<{}, IClient>
 
@@ -52,9 +53,11 @@ const setupTables = async () => {
 
 const initDB = async () => {
 	
+	const config = await configPromise;
+	
 	const pgp = pgPromise();
 	
-	db = pgp('postgres://vault:1234@localhost/vault');
+	db = pgp(config.databaseURL);
 	
 	await setupTables();
 	

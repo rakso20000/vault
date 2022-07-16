@@ -20,8 +20,6 @@ addEndpoint<Args>('deleteFolder', 'DELETE', {
 			cipherFolderName
 		]);
 		
-		console.log(files);
-		
 		const largeObjectManager = new LargeObjectManager({pgPromise: tx});
 		
 		await Promise.all(files.map(file => largeObjectManager.unlinkAsync(file.oid)));

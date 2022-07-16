@@ -12,7 +12,8 @@
 		"start-dev:frontend": "cd frontend && npm start",
 		"start-dev:backend": "cd backend && npm run start-dev",
 		"start-dev": "run-p start-dev:*",
-		"postinstall": "run-p install:*"
+		"postinstall": "run-p install:*",
+		"start": "cd backend && npm start"
 	},
 	"author": "David Wolff"
 }
