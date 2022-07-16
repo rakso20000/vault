@@ -50,11 +50,7 @@ const Sidebar: FC<Props> = ({userData, selectedFolderState: [selectedFolder, set
 		
 	}, [userData]);
 	
-	console.log('a');
-	
 	useEffect(() => {
-		
-		console.log('b');
 		
 		setIsSidebarOpen(selectedFolder === null);
 		
