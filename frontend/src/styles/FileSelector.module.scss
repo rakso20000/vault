@@ -39,6 +39,11 @@
 	width: calc(100% + 2px);
 	height: calc(100% + 2px);
 	visibility: hidden;
+	pointer-events: none;
+	
+	* {
+		pointer-events: auto;
+	}
 }
 
 .main:hover .overlay,
